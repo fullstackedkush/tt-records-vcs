@@ -1,0 +1,27 @@
+fragment Post on Post {
+    id
+    title
+    subtitle
+    category
+    link
+    publishedAt
+    image {
+        url
+    }
+    content {
+        raw
+    }
+}
+
+
+query getPosts($where: PostWhereInput $skip: Int) {
+    posts(where: $where skip: $skip) {
+        ...Post
+    }
+}
+
+query getPost($id: ID) {
+    post(where: { id: $id }) {
+        ...Post
+    }
+}

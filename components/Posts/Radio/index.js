@@ -229,16 +229,18 @@ const CompactContainer = styled.div`
 
 `
 
-const Radio = () => {
+const Radio = ({title, subtitle, image}) => {
     return <Wrapper>
         <FullContainer>
             <ImageContainer>
-                <img src="https://media.graphcms.com/BG9kANHR82XdgcdCbWYT" alt="TT and NTS album" />
+                {image && (
+                    <img src={image.url} alt={title} />
+                )}
                 <svg className="play" width="75" height="75" viewBox="0 0 75 75" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M0 75V37.5V0H37.5H75V37.5V75H37.5H0ZM27 51L54 37.5L27 24V51Z" fill="#111111"/></svg>
             </ImageContainer>
             <div className="text__container">
-                <h2 className="subtitle">On NTS:</h2>
-                <h2 className="title">TT W/ DJ PITCH, GRIBS AND KAMAAHSHATEE</h2>
+                <h2 className="subtitle">{subtitle}:</h2>
+                <h2 className="title">{title}</h2>
                 <div className="content__container">
                     <p className="category">Radio</p>
                     <date className="date">Added March 20th 2020</date>

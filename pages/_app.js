@@ -1,6 +1,8 @@
 import '../styles/globals.css'
-
 import { createGlobalStyle } from 'styled-components';
+import { useApollo } from "../utilites";
+import {ApolloProvider} from "@apollo/client";
+import React from "react";
 
 const GlobalStyles = createGlobalStyle`
   :root {
@@ -13,11 +15,13 @@ const GlobalStyles = createGlobalStyle`
 `
 
 function MyApp({ Component, pageProps }) {
+  const apolloClient = useApollo(pageProps.initialApolloState)
+
   return (
-    <>
-      <GlobalStyles />
-      <Component {...pageProps} />
-    </>
+    <ApolloProvider client={apolloClient}>
+        <GlobalStyles />
+        <Component {...pageProps} />
+    </ApolloProvider>
   )
 }
 
