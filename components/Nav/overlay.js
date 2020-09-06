@@ -83,7 +83,7 @@ const Overlay = () => (
             <li><a href="#">Artists</a></li>
             <li><a href="#">Shop</a></li>
             <li><a href="#">About</a></li>
-            <li class="open"><img src="https://media.graphcms.com/eDrHGLAQbW1Px8TAEVKg" /><input placeholder="Search" type="search" /></li>
+            <li className="open"><img src="https://media.graphcms.com/eDrHGLAQbW1Px8TAEVKg" /><input placeholder="Search" type="search" /></li>
         </ul>
     </OverlayContainer>
 );

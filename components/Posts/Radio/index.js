@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 const Wrapper = styled.section`
 position: relative;
-margin-bottom: 59px;
+
+margin-bottom: 38px;
 
 &:after {
     content: "";
@@ -16,10 +17,13 @@ margin-bottom: 59px;
     left: 0;
     bottom: -30px;
 }
-
 `
 
 const FullContainer = styled.div`
+
+@media only screen and (min-width: 800px) {
+    margin-bottom: 59px;
+}
 
 @media only screen and (min-width: 800px) {
     display: flex;
@@ -86,58 +90,70 @@ const FullContainer = styled.div`
     }
 `
 const ImageContainer = styled.div`
-@media only screen and (min-width: 800px) {
-    max-width: 418px;
+.play {
+    display: none;
 }
 
+@media only screen and (min-width: 800px) {
+    max-width: 418px;
     .play {
         position: absolute;
         top: calc(50% - 37.5px);
         left: 10px;
         background: white;
         border: 1px solid white;
+        display: block;
     }
+}
+
+
 `
 
 const CompactContainer = styled.div`
-    display: none;
+
     min-width: 100%;
+
+
     .text__container {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;   
         justify-content: space-between;
         min-width: 100%;
         align-content: center;
-        margin-left: 70px;
-    }
+        padding-bottom: 10px;
 
-    @media only screen and (min-width: 800px) {
-        .text__container {
-            margin-left: 70px;
-        }        
+        @media only screen and (min-width: 1000px) {
+            flex-direction: row;  
+            margin-top: 30px;
+            padding-bottom: 0;
+        }
     }
 
     h2.subtitle {
-        font-size: 12px;
+        font-size: 24px;
         line-height: 14px;
         font-family: 'Nimbus Sans L';
-        font-weight: regular;
+        font-weight: 400;
         font-size: 24px;
         letter-spacing: -0.96px;
         line-height: 32px;
     }
 
-    .title {
-        font-size: 12px;
+    h2.title {
+        font-size: 24px;
         line-height: 14px;
-        display: flex;
-        align-content: center;
-        justify-content: center;
         font-family: 'Nimbus Sans L';
-        font-weight: bold;
+        font-weight: 400;
         font-size: 24px;
         letter-spacing: -0.96px;
         line-height: 32px;
+        margin-bottom: 8px;
+
+        @media only screen and (min-width: 1000px) {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+        }
     }
 
     .content__container {
@@ -148,7 +164,7 @@ const CompactContainer = styled.div`
 
     .category {
         font-family: 'Nimbus Sans L';
-        font-weight: bold;
+        font-weight: 400;
         font-size: 16px;
         letter-spacing: -0.48px;
         line-height: 24px;
@@ -159,6 +175,20 @@ const CompactContainer = styled.div`
         position: relative;
         margin-right: 10px;
 
+        &:before {
+            content: "\u25AA";
+            display: inline-block;
+            color: black;
+            position: absolute;
+            left: -10px;
+        }
+    }
+
+    .category__mobile {     
+        display: inline-block;
+        margin-right: 18px;
+
+
         &:after {
             content: "\u25AA";
             display: inline-block;
@@ -166,10 +196,34 @@ const CompactContainer = styled.div`
             position: absolute;
             right: -10px;
         }
+
+        &:before {
+            display: none;
+        }
+    }
+
+    .category__desktop {
+        display: none;
+
+        &:after {
+            display: none;
+        }
+    }
+
+    @media only screen and (min-width: 1000px) {
+        .category__desktop {
+            display: inline-block;
+        }
+
+        .category__mobile {
+            display: none;
+        }
     }
 
     date {
         display: inline-block;
+        font-size: 16px;
+        margin-right: 14px;
     }
 
 
@@ -196,8 +250,9 @@ const Radio = () => {
                 <h2 className="subtitle">On NTS:</h2>
                 <h2 className="title">TT W/ DJ PITCH, GRIBS AND KAMAAHSHATEE</h2>
                 <div className="content__container">
-                    <p className="category">Radio</p>
+                    <p className="category category__mobile">Radio</p>
                     <date className="date">Added March 20th 2020</date>
+                    <p className="category category__desktop">Radio</p>
                 </div>
             </div>
         </CompactContainer>
