@@ -13,6 +13,15 @@ fragment Post on Post {
     }
 }
 
+fragment Artist on Artist {
+    id
+    bandcamp
+    artistName
+    soundcloud
+    spotify
+    iTunes
+}
+
 
 query getPosts($where: PostWhereInput $skip: Int) {
     posts(where: $where skip: $skip) {
@@ -23,5 +32,11 @@ query getPosts($where: PostWhereInput $skip: Int) {
 query getPost($id: ID) {
     post(where: { id: $id }) {
         ...Post
+    }
+}
+
+query getArtists {
+    artists {
+        ...Artist
     }
 }

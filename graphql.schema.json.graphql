@@ -13,8 +13,106 @@ interface Node {
     stage: Stage!
 }
 
+type About implements Node {
+    "The time the document was created"
+    createdAt: DateTime!
+    description: String
+    "Get the document in other stages"
+    documentInStages(
+        "Decides if the current stage should be included or not"
+        includeCurrent: Boolean! = false,
+        "Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"
+        inheritLocale: Boolean! = false,
+        "Potential stages that should be returned"
+        stages: [Stage!]! = [PUBLISHED, DRAFT]
+    ): [About!]!
+    "List of About versions"
+    history(
+        limit: Int! = 10,
+        skip: Int! = 0,
+        "This is optional and can be used to fetch the document version history for a specific stage instead of the current one"
+        stageOverride: Stage
+    ): [Version!]!
+    "The unique identifier"
+    id: ID!
+    "The time the document was published. Null on documents in draft stage."
+    publishedAt: DateTime
+    "System stage field"
+    stage: Stage!
+    "The time the document was updated"
+    updatedAt: DateTime!
+}
+
+"A connection to a list of items."
+type AboutConnection {
+    aggregate: Aggregate!
+    "A list of edges."
+    edges: [AboutEdge!]!
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type AboutEdge {
+    "A cursor for use in pagination."
+    cursor: String!
+    "The item at the end of the edge."
+    node: About!
+}
+
 type Aggregate {
     count: Int!
+}
+
+type Artist implements Node {
+    artistName: String
+    bandcamp: String
+    "The time the document was created"
+    createdAt: DateTime!
+    "Get the document in other stages"
+    documentInStages(
+        "Decides if the current stage should be included or not"
+        includeCurrent: Boolean! = false,
+        "Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"
+        inheritLocale: Boolean! = false,
+        "Potential stages that should be returned"
+        stages: [Stage!]! = [PUBLISHED, DRAFT]
+    ): [Artist!]!
+    "List of Artist versions"
+    history(
+        limit: Int! = 10,
+        skip: Int! = 0,
+        "This is optional and can be used to fetch the document version history for a specific stage instead of the current one"
+        stageOverride: Stage
+    ): [Version!]!
+    iTunes: String
+    "The unique identifier"
+    id: ID!
+    "The time the document was published. Null on documents in draft stage."
+    publishedAt: DateTime
+    soundcloud: String
+    spotify: String
+    "System stage field"
+    stage: Stage!
+    "The time the document was updated"
+    updatedAt: DateTime!
+}
+
+"A connection to a list of items."
+type ArtistConnection {
+    aggregate: Aggregate!
+    "A list of edges."
+    edges: [ArtistEdge!]!
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ArtistEdge {
+    "A cursor for use in pagination."
+    cursor: String!
+    "The item at the end of the edge."
+    node: Artist!
 }
 
 "Asset system model"
@@ -125,15 +223,61 @@ type Location {
 }
 
 type Mutation {
+    "Create one about"
+    createAbout(data: AboutCreateInput!): About
+    "Create one artist"
+    createArtist(data: ArtistCreateInput!): Artist
     "Create one asset"
     createAsset(data: AssetCreateInput!): Asset @deprecated(reason : "Asset mutations will be overhauled soon")
     "Create one post"
     createPost(data: PostCreateInput!): Post
+    "Create one release"
+    createRelease(data: ReleaseCreateInput!): Release
+    "Delete one about from _all_ existing stages. Returns deleted document."
+    deleteAbout(
+        "Document to delete"
+        where: AboutWhereUniqueInput!
+    ): About
+    "Delete one artist from _all_ existing stages. Returns deleted document."
+    deleteArtist(
+        "Document to delete"
+        where: ArtistWhereUniqueInput!
+    ): Artist
     "Delete one asset from _all_ existing stages. Returns deleted document."
     deleteAsset(
         "Document to delete"
         where: AssetWhereUniqueInput!
     ): Asset
+    "Delete many About documents"
+    deleteManyAbouts(
+        "Documents to delete"
+        where: AboutManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (deleteManyAboutsConnection)")
+    "Delete many About documents, return deleted documents"
+    deleteManyAboutsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to delete"
+        where: AboutManyWhereInput
+    ): AboutConnection!
+    "Delete many Artist documents"
+    deleteManyArtists(
+        "Documents to delete"
+        where: ArtistManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (deleteManyArtistsConnection)")
+    "Delete many Artist documents, return deleted documents"
+    deleteManyArtistsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to delete"
+        where: ArtistManyWhereInput
+    ): ArtistConnection!
     "Delete many Asset documents"
     deleteManyAssets(
         "Documents to delete"
@@ -164,11 +308,45 @@ type Mutation {
         "Documents to delete"
         where: PostManyWhereInput
     ): PostConnection!
+    "Delete many Release documents"
+    deleteManyReleases(
+        "Documents to delete"
+        where: ReleaseManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (deleteManyReleasesConnection)")
+    "Delete many Release documents, return deleted documents"
+    deleteManyReleasesConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to delete"
+        where: ReleaseManyWhereInput
+    ): ReleaseConnection!
     "Delete one post from _all_ existing stages. Returns deleted document."
     deletePost(
         "Document to delete"
         where: PostWhereUniqueInput!
     ): Post
+    "Delete one release from _all_ existing stages. Returns deleted document."
+    deleteRelease(
+        "Document to delete"
+        where: ReleaseWhereUniqueInput!
+    ): Release
+    "Publish one about"
+    publishAbout(
+        "Publishing target stage"
+        to: [Stage!]! = [PUBLISHED],
+        "Document to publish"
+        where: AboutWhereUniqueInput!
+    ): About
+    "Publish one artist"
+    publishArtist(
+        "Publishing target stage"
+        to: [Stage!]! = [PUBLISHED],
+        "Document to publish"
+        where: ArtistWhereUniqueInput!
+    ): Artist
     "Publish one asset"
     publishAsset(
         "Optional localizations to publish"
@@ -180,6 +358,48 @@ type Mutation {
         "Document to publish"
         where: AssetWhereUniqueInput!
     ): Asset
+    "Publish many About documents"
+    publishManyAbouts(
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: AboutManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (publishManyAboutsConnection)")
+    "Publish many About documents"
+    publishManyAboutsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stage to find matching documents in"
+        from: Stage = DRAFT,
+        last: Int,
+        skip: Int,
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: AboutManyWhereInput
+    ): AboutConnection!
+    "Publish many Artist documents"
+    publishManyArtists(
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: ArtistManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (publishManyArtistsConnection)")
+    "Publish many Artist documents"
+    publishManyArtistsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stage to find matching documents in"
+        from: Stage = DRAFT,
+        last: Int,
+        skip: Int,
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: ArtistManyWhereInput
+    ): ArtistConnection!
     "Publish many Asset documents"
     publishManyAssets(
         "Document localizations to publish"
@@ -230,6 +450,27 @@ type Mutation {
         "Identifies documents in each stage to be published"
         where: PostManyWhereInput
     ): PostConnection!
+    "Publish many Release documents"
+    publishManyReleases(
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: ReleaseManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (publishManyReleasesConnection)")
+    "Publish many Release documents"
+    publishManyReleasesConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stage to find matching documents in"
+        from: Stage = DRAFT,
+        last: Int,
+        skip: Int,
+        "Stages to publish documents to"
+        to: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage to be published"
+        where: ReleaseManyWhereInput
+    ): ReleaseConnection!
     "Publish one post"
     publishPost(
         "Publishing target stage"
@@ -237,6 +478,27 @@ type Mutation {
         "Document to publish"
         where: PostWhereUniqueInput!
     ): Post
+    "Publish one release"
+    publishRelease(
+        "Publishing target stage"
+        to: [Stage!]! = [PUBLISHED],
+        "Document to publish"
+        where: ReleaseWhereUniqueInput!
+    ): Release
+    "Unpublish one about from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."
+    unpublishAbout(
+        "Stages to unpublish document from"
+        from: [Stage!]! = [PUBLISHED],
+        "Document to unpublish"
+        where: AboutWhereUniqueInput!
+    ): About
+    "Unpublish one artist from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."
+    unpublishArtist(
+        "Stages to unpublish document from"
+        from: [Stage!]! = [PUBLISHED],
+        "Document to unpublish"
+        where: ArtistWhereUniqueInput!
+    ): Artist
     "Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."
     unpublishAsset(
         "Stages to unpublish document from"
@@ -248,6 +510,48 @@ type Mutation {
         "Document to unpublish"
         where: AssetWhereUniqueInput!
     ): Asset
+    "Unpublish many About documents"
+    unpublishManyAbouts(
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage"
+        where: AboutManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (unpublishManyAboutsConnection)")
+    "Find many About documents that match criteria in specified stage and unpublish from target stages"
+    unpublishManyAboutsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        last: Int,
+        skip: Int,
+        "Stage to find matching documents in"
+        stage: Stage = DRAFT,
+        "Identifies documents in draft stage"
+        where: AboutManyWhereInput
+    ): AboutConnection!
+    "Unpublish many Artist documents"
+    unpublishManyArtists(
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage"
+        where: ArtistManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (unpublishManyArtistsConnection)")
+    "Find many Artist documents that match criteria in specified stage and unpublish from target stages"
+    unpublishManyArtistsConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        last: Int,
+        skip: Int,
+        "Stage to find matching documents in"
+        stage: Stage = DRAFT,
+        "Identifies documents in draft stage"
+        where: ArtistManyWhereInput
+    ): ArtistConnection!
     "Unpublish many Asset documents"
     unpublishManyAssets(
         "Stages to unpublish documents from"
@@ -298,6 +602,27 @@ type Mutation {
         "Identifies documents in draft stage"
         where: PostManyWhereInput
     ): PostConnection!
+    "Unpublish many Release documents"
+    unpublishManyReleases(
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        "Identifies documents in each stage"
+        where: ReleaseManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (unpublishManyReleasesConnection)")
+    "Find many Release documents that match criteria in specified stage and unpublish from target stages"
+    unpublishManyReleasesConnection(
+        after: ID,
+        before: ID,
+        first: Int,
+        "Stages to unpublish documents from"
+        from: [Stage!]! = [PUBLISHED],
+        last: Int,
+        skip: Int,
+        "Stage to find matching documents in"
+        stage: Stage = DRAFT,
+        "Identifies documents in draft stage"
+        where: ReleaseManyWhereInput
+    ): ReleaseConnection!
     "Unpublish one post from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."
     unpublishPost(
         "Stages to unpublish document from"
@@ -305,8 +630,57 @@ type Mutation {
         "Document to unpublish"
         where: PostWhereUniqueInput!
     ): Post
+    "Unpublish one release from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."
+    unpublishRelease(
+        "Stages to unpublish document from"
+        from: [Stage!]! = [PUBLISHED],
+        "Document to unpublish"
+        where: ReleaseWhereUniqueInput!
+    ): Release
+    "Update one about"
+    updateAbout(data: AboutUpdateInput!, where: AboutWhereUniqueInput!): About
+    "Update one artist"
+    updateArtist(data: ArtistUpdateInput!, where: ArtistWhereUniqueInput!): Artist
     "Update one asset"
     updateAsset(data: AssetUpdateInput!, where: AssetWhereUniqueInput!): Asset
+    "Update many abouts"
+    updateManyAbouts(
+        "Updates to document content"
+        data: AboutUpdateManyInput!,
+        "Documents to apply update on"
+        where: AboutManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (updateManyAboutsConnection)")
+    "Update many About documents"
+    updateManyAboutsConnection(
+        after: ID,
+        before: ID,
+        "Updates to document content"
+        data: AboutUpdateManyInput!,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to apply update on"
+        where: AboutManyWhereInput
+    ): AboutConnection!
+    "Update many artists"
+    updateManyArtists(
+        "Updates to document content"
+        data: ArtistUpdateManyInput!,
+        "Documents to apply update on"
+        where: ArtistManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (updateManyArtistsConnection)")
+    "Update many Artist documents"
+    updateManyArtistsConnection(
+        after: ID,
+        before: ID,
+        "Updates to document content"
+        data: ArtistUpdateManyInput!,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to apply update on"
+        where: ArtistManyWhereInput
+    ): ArtistConnection!
     "Update many assets"
     updateManyAssets(
         "Updates to document content"
@@ -345,12 +719,39 @@ type Mutation {
         "Documents to apply update on"
         where: PostManyWhereInput
     ): PostConnection!
+    "Update many releases"
+    updateManyReleases(
+        "Updates to document content"
+        data: ReleaseUpdateManyInput!,
+        "Documents to apply update on"
+        where: ReleaseManyWhereInput
+    ): BatchPayload! @deprecated(reason : "Please use the new paginated many mutation (updateManyReleasesConnection)")
+    "Update many Release documents"
+    updateManyReleasesConnection(
+        after: ID,
+        before: ID,
+        "Updates to document content"
+        data: ReleaseUpdateManyInput!,
+        first: Int,
+        last: Int,
+        skip: Int,
+        "Documents to apply update on"
+        where: ReleaseManyWhereInput
+    ): ReleaseConnection!
     "Update one post"
     updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
+    "Update one release"
+    updateRelease(data: ReleaseUpdateInput!, where: ReleaseWhereUniqueInput!): Release
+    "Upsert one about"
+    upsertAbout(upsert: AboutUpsertInput!, where: AboutWhereUniqueInput!): About
+    "Upsert one artist"
+    upsertArtist(upsert: ArtistUpsertInput!, where: ArtistWhereUniqueInput!): Artist
     "Upsert one asset"
     upsertAsset(upsert: AssetUpsertInput!, where: AssetWhereUniqueInput!): Asset
     "Upsert one post"
     upsertPost(upsert: PostUpsertInput!, where: PostWhereUniqueInput!): Post
+    "Upsert one release"
+    upsertRelease(upsert: ReleaseUpsertInput!, where: ReleaseWhereUniqueInput!): Release
 }
 
 "Information about pagination in a connection."
@@ -420,6 +821,22 @@ type PostEdge {
 }
 
 type Query {
+    "Retrieve a single about"
+    about(stage: Stage! = PUBLISHED, where: AboutWhereUniqueInput!): About
+    "Retrieve document version"
+    aboutVersion(where: VersionWhereInput!): DocumentVersion
+    "Retrieve multiple abouts"
+    abouts(after: String, before: String, first: Int, last: Int, orderBy: AboutOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: AboutWhereInput): [About!]!
+    "Retrieve multiple abouts using the Relay connection interface"
+    aboutsConnection(after: String, before: String, first: Int, last: Int, orderBy: AboutOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: AboutWhereInput): AboutConnection!
+    "Retrieve a single artist"
+    artist(stage: Stage! = PUBLISHED, where: ArtistWhereUniqueInput!): Artist
+    "Retrieve document version"
+    artistVersion(where: VersionWhereInput!): DocumentVersion
+    "Retrieve multiple artists"
+    artists(after: String, before: String, first: Int, last: Int, orderBy: ArtistOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: ArtistWhereInput): [Artist!]!
+    "Retrieve multiple artists using the Relay connection interface"
+    artistsConnection(after: String, before: String, first: Int, last: Int, orderBy: ArtistOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: ArtistWhereInput): ArtistConnection!
     "Retrieve a single asset"
     asset(
         "First locale matched will be used based on the order of this input"
@@ -471,6 +888,14 @@ type Query {
     posts(after: String, before: String, first: Int, last: Int, orderBy: PostOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: PostWhereInput): [Post!]!
     "Retrieve multiple posts using the Relay connection interface"
     postsConnection(after: String, before: String, first: Int, last: Int, orderBy: PostOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: PostWhereInput): PostConnection!
+    "Retrieve a single release"
+    release(stage: Stage! = PUBLISHED, where: ReleaseWhereUniqueInput!): Release
+    "Retrieve document version"
+    releaseVersion(where: VersionWhereInput!): DocumentVersion
+    "Retrieve multiple releases"
+    releases(after: String, before: String, first: Int, last: Int, orderBy: ReleaseOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: ReleaseWhereInput): [Release!]!
+    "Retrieve multiple releases using the Relay connection interface"
+    releasesConnection(after: String, before: String, first: Int, last: Int, orderBy: ReleaseOrderByInput, skip: Int, stage: Stage! = PUBLISHED, where: ReleaseWhereInput): ReleaseConnection!
 }
 
 "Representing a RGBA color value: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#rgb()_and_rgba()"
@@ -479,6 +904,52 @@ type RGBA {
     b: RGBAHue!
     g: RGBAHue!
     r: RGBAHue!
+}
+
+type Release implements Node {
+    "The time the document was created"
+    createdAt: DateTime!
+    "Get the document in other stages"
+    documentInStages(
+        "Decides if the current stage should be included or not"
+        includeCurrent: Boolean! = false,
+        "Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"
+        inheritLocale: Boolean! = false,
+        "Potential stages that should be returned"
+        stages: [Stage!]! = [PUBLISHED, DRAFT]
+    ): [Release!]!
+    "List of Release versions"
+    history(
+        limit: Int! = 10,
+        skip: Int! = 0,
+        "This is optional and can be used to fetch the document version history for a specific stage instead of the current one"
+        stageOverride: Stage
+    ): [Version!]!
+    "The unique identifier"
+    id: ID!
+    "The time the document was published. Null on documents in draft stage."
+    publishedAt: DateTime
+    "System stage field"
+    stage: Stage!
+    "The time the document was updated"
+    updatedAt: DateTime!
+}
+
+"A connection to a list of items."
+type ReleaseConnection {
+    aggregate: Aggregate!
+    "A list of edges."
+    edges: [ReleaseEdge!]!
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ReleaseEdge {
+    "A cursor for use in pagination."
+    cursor: String!
+    "The item at the end of the edge."
+    node: Release!
 }
 
 "Custom type representing a rich text value comprising of raw rich text ast, html, markdown and text values"
@@ -498,6 +969,40 @@ type Version {
     id: ID!
     revision: Int!
     stage: Stage!
+}
+
+enum AboutOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    description_ASC
+    description_DESC
+    id_ASC
+    id_DESC
+    publishedAt_ASC
+    publishedAt_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum ArtistOrderByInput {
+    artistName_ASC
+    artistName_DESC
+    bandcamp_ASC
+    bandcamp_DESC
+    createdAt_ASC
+    createdAt_DESC
+    iTunes_ASC
+    iTunes_DESC
+    id_ASC
+    id_DESC
+    publishedAt_ASC
+    publishedAt_DESC
+    soundcloud_ASC
+    soundcloud_DESC
+    spotify_ASC
+    spotify_DESC
+    updatedAt_ASC
+    updatedAt_DESC
 }
 
 enum AssetOrderByInput {
@@ -582,6 +1087,17 @@ enum PostOrderByInput {
     subtitle_DESC
     title_ASC
     title_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum ReleaseOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    id_ASC
+    id_DESC
+    publishedAt_ASC
+    publishedAt_DESC
     updatedAt_ASC
     updatedAt_DESC
 }
@@ -674,6 +1190,644 @@ enum _SystemDateTimeFieldVariation {
     base
     combined
     localization
+}
+
+input AboutCreateInput {
+    createdAt: DateTime
+    description: String
+    updatedAt: DateTime
+}
+
+"Identifies documents"
+input AboutManyWhereInput {
+    "Logical AND on all given filters."
+    AND: [AboutWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [AboutWhereInput!]
+    "Logical OR on all given filters."
+    OR: [AboutWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    description: String
+    "All values containing the given string."
+    description_contains: String
+    "All values ending with the given string."
+    description_ends_with: String
+    "All values that are contained in given list."
+    description_in: [String!]
+    "All values that are not equal to given value."
+    description_not: String
+    "All values not containing the given string."
+    description_not_contains: String
+    "All values not ending with the given string"
+    description_not_ends_with: String
+    "All values that are not contained in given list."
+    description_not_in: [String!]
+    "All values not starting with the given string."
+    description_not_starts_with: String
+    "All values starting with the given string."
+    description_starts_with: String
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+input AboutUpdateInput {
+    description: String
+}
+
+input AboutUpdateManyInput {
+    description: String
+}
+
+input AboutUpdateManyWithNestedWhereInput {
+    "Update many input"
+    data: AboutUpdateManyInput!
+    "Document search"
+    where: AboutWhereInput!
+}
+
+input AboutUpdateWithNestedWhereUniqueInput {
+    "Document to update"
+    data: AboutUpdateInput!
+    "Unique document search"
+    where: AboutWhereUniqueInput!
+}
+
+input AboutUpsertInput {
+    "Create document if it didn't exist"
+    create: AboutCreateInput!
+    "Update document if it exists"
+    update: AboutUpdateInput!
+}
+
+input AboutUpsertWithNestedWhereUniqueInput {
+    "Upsert data"
+    data: AboutUpsertInput!
+    "Unique document search"
+    where: AboutWhereUniqueInput!
+}
+
+"Identifies documents"
+input AboutWhereInput {
+    "Logical AND on all given filters."
+    AND: [AboutWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [AboutWhereInput!]
+    "Logical OR on all given filters."
+    OR: [AboutWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    description: String
+    "All values containing the given string."
+    description_contains: String
+    "All values ending with the given string."
+    description_ends_with: String
+    "All values that are contained in given list."
+    description_in: [String!]
+    "All values that are not equal to given value."
+    description_not: String
+    "All values not containing the given string."
+    description_not_contains: String
+    "All values not ending with the given string"
+    description_not_ends_with: String
+    "All values that are not contained in given list."
+    description_not_in: [String!]
+    "All values not starting with the given string."
+    description_not_starts_with: String
+    "All values starting with the given string."
+    description_starts_with: String
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+"References About record uniquely"
+input AboutWhereUniqueInput {
+    id: ID
+}
+
+input ArtistCreateInput {
+    artistName: String
+    bandcamp: String
+    createdAt: DateTime
+    iTunes: String
+    soundcloud: String
+    spotify: String
+    updatedAt: DateTime
+}
+
+"Identifies documents"
+input ArtistManyWhereInput {
+    "Logical AND on all given filters."
+    AND: [ArtistWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [ArtistWhereInput!]
+    "Logical OR on all given filters."
+    OR: [ArtistWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    artistName: String
+    "All values containing the given string."
+    artistName_contains: String
+    "All values ending with the given string."
+    artistName_ends_with: String
+    "All values that are contained in given list."
+    artistName_in: [String!]
+    "All values that are not equal to given value."
+    artistName_not: String
+    "All values not containing the given string."
+    artistName_not_contains: String
+    "All values not ending with the given string"
+    artistName_not_ends_with: String
+    "All values that are not contained in given list."
+    artistName_not_in: [String!]
+    "All values not starting with the given string."
+    artistName_not_starts_with: String
+    "All values starting with the given string."
+    artistName_starts_with: String
+    bandcamp: String
+    "All values containing the given string."
+    bandcamp_contains: String
+    "All values ending with the given string."
+    bandcamp_ends_with: String
+    "All values that are contained in given list."
+    bandcamp_in: [String!]
+    "All values that are not equal to given value."
+    bandcamp_not: String
+    "All values not containing the given string."
+    bandcamp_not_contains: String
+    "All values not ending with the given string"
+    bandcamp_not_ends_with: String
+    "All values that are not contained in given list."
+    bandcamp_not_in: [String!]
+    "All values not starting with the given string."
+    bandcamp_not_starts_with: String
+    "All values starting with the given string."
+    bandcamp_starts_with: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    iTunes: String
+    "All values containing the given string."
+    iTunes_contains: String
+    "All values ending with the given string."
+    iTunes_ends_with: String
+    "All values that are contained in given list."
+    iTunes_in: [String!]
+    "All values that are not equal to given value."
+    iTunes_not: String
+    "All values not containing the given string."
+    iTunes_not_contains: String
+    "All values not ending with the given string"
+    iTunes_not_ends_with: String
+    "All values that are not contained in given list."
+    iTunes_not_in: [String!]
+    "All values not starting with the given string."
+    iTunes_not_starts_with: String
+    "All values starting with the given string."
+    iTunes_starts_with: String
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    soundcloud: String
+    "All values containing the given string."
+    soundcloud_contains: String
+    "All values ending with the given string."
+    soundcloud_ends_with: String
+    "All values that are contained in given list."
+    soundcloud_in: [String!]
+    "All values that are not equal to given value."
+    soundcloud_not: String
+    "All values not containing the given string."
+    soundcloud_not_contains: String
+    "All values not ending with the given string"
+    soundcloud_not_ends_with: String
+    "All values that are not contained in given list."
+    soundcloud_not_in: [String!]
+    "All values not starting with the given string."
+    soundcloud_not_starts_with: String
+    "All values starting with the given string."
+    soundcloud_starts_with: String
+    spotify: String
+    "All values containing the given string."
+    spotify_contains: String
+    "All values ending with the given string."
+    spotify_ends_with: String
+    "All values that are contained in given list."
+    spotify_in: [String!]
+    "All values that are not equal to given value."
+    spotify_not: String
+    "All values not containing the given string."
+    spotify_not_contains: String
+    "All values not ending with the given string"
+    spotify_not_ends_with: String
+    "All values that are not contained in given list."
+    spotify_not_in: [String!]
+    "All values not starting with the given string."
+    spotify_not_starts_with: String
+    "All values starting with the given string."
+    spotify_starts_with: String
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+input ArtistUpdateInput {
+    artistName: String
+    bandcamp: String
+    iTunes: String
+    soundcloud: String
+    spotify: String
+}
+
+input ArtistUpdateManyInput {
+    artistName: String
+    bandcamp: String
+    iTunes: String
+    soundcloud: String
+    spotify: String
+}
+
+input ArtistUpdateManyWithNestedWhereInput {
+    "Update many input"
+    data: ArtistUpdateManyInput!
+    "Document search"
+    where: ArtistWhereInput!
+}
+
+input ArtistUpdateWithNestedWhereUniqueInput {
+    "Document to update"
+    data: ArtistUpdateInput!
+    "Unique document search"
+    where: ArtistWhereUniqueInput!
+}
+
+input ArtistUpsertInput {
+    "Create document if it didn't exist"
+    create: ArtistCreateInput!
+    "Update document if it exists"
+    update: ArtistUpdateInput!
+}
+
+input ArtistUpsertWithNestedWhereUniqueInput {
+    "Upsert data"
+    data: ArtistUpsertInput!
+    "Unique document search"
+    where: ArtistWhereUniqueInput!
+}
+
+"Identifies documents"
+input ArtistWhereInput {
+    "Logical AND on all given filters."
+    AND: [ArtistWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [ArtistWhereInput!]
+    "Logical OR on all given filters."
+    OR: [ArtistWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    artistName: String
+    "All values containing the given string."
+    artistName_contains: String
+    "All values ending with the given string."
+    artistName_ends_with: String
+    "All values that are contained in given list."
+    artistName_in: [String!]
+    "All values that are not equal to given value."
+    artistName_not: String
+    "All values not containing the given string."
+    artistName_not_contains: String
+    "All values not ending with the given string"
+    artistName_not_ends_with: String
+    "All values that are not contained in given list."
+    artistName_not_in: [String!]
+    "All values not starting with the given string."
+    artistName_not_starts_with: String
+    "All values starting with the given string."
+    artistName_starts_with: String
+    bandcamp: String
+    "All values containing the given string."
+    bandcamp_contains: String
+    "All values ending with the given string."
+    bandcamp_ends_with: String
+    "All values that are contained in given list."
+    bandcamp_in: [String!]
+    "All values that are not equal to given value."
+    bandcamp_not: String
+    "All values not containing the given string."
+    bandcamp_not_contains: String
+    "All values not ending with the given string"
+    bandcamp_not_ends_with: String
+    "All values that are not contained in given list."
+    bandcamp_not_in: [String!]
+    "All values not starting with the given string."
+    bandcamp_not_starts_with: String
+    "All values starting with the given string."
+    bandcamp_starts_with: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    iTunes: String
+    "All values containing the given string."
+    iTunes_contains: String
+    "All values ending with the given string."
+    iTunes_ends_with: String
+    "All values that are contained in given list."
+    iTunes_in: [String!]
+    "All values that are not equal to given value."
+    iTunes_not: String
+    "All values not containing the given string."
+    iTunes_not_contains: String
+    "All values not ending with the given string"
+    iTunes_not_ends_with: String
+    "All values that are not contained in given list."
+    iTunes_not_in: [String!]
+    "All values not starting with the given string."
+    iTunes_not_starts_with: String
+    "All values starting with the given string."
+    iTunes_starts_with: String
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    soundcloud: String
+    "All values containing the given string."
+    soundcloud_contains: String
+    "All values ending with the given string."
+    soundcloud_ends_with: String
+    "All values that are contained in given list."
+    soundcloud_in: [String!]
+    "All values that are not equal to given value."
+    soundcloud_not: String
+    "All values not containing the given string."
+    soundcloud_not_contains: String
+    "All values not ending with the given string"
+    soundcloud_not_ends_with: String
+    "All values that are not contained in given list."
+    soundcloud_not_in: [String!]
+    "All values not starting with the given string."
+    soundcloud_not_starts_with: String
+    "All values starting with the given string."
+    soundcloud_starts_with: String
+    spotify: String
+    "All values containing the given string."
+    spotify_contains: String
+    "All values ending with the given string."
+    spotify_ends_with: String
+    "All values that are contained in given list."
+    spotify_in: [String!]
+    "All values that are not equal to given value."
+    spotify_not: String
+    "All values not containing the given string."
+    spotify_not_contains: String
+    "All values not ending with the given string"
+    spotify_not_ends_with: String
+    "All values that are not contained in given list."
+    spotify_not_in: [String!]
+    "All values not starting with the given string."
+    spotify_not_starts_with: String
+    "All values starting with the given string."
+    spotify_starts_with: String
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+"References Artist record uniquely"
+input ArtistWhereUniqueInput {
+    id: ID
 }
 
 input AssetConnectInput {
@@ -1622,6 +2776,206 @@ input RGBAInput {
     r: RGBAHue!
 }
 
+input ReleaseCreateInput {
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+"Identifies documents"
+input ReleaseManyWhereInput {
+    "Logical AND on all given filters."
+    AND: [ReleaseWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [ReleaseWhereInput!]
+    "Logical OR on all given filters."
+    OR: [ReleaseWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+input ReleaseUpdateInput {
+    "No fields in update input"
+    _: String
+}
+
+input ReleaseUpdateManyInput {
+    "No fields in updateMany data input"
+    _: String
+}
+
+input ReleaseUpdateManyWithNestedWhereInput {
+    "Update many input"
+    data: ReleaseUpdateManyInput!
+    "Document search"
+    where: ReleaseWhereInput!
+}
+
+input ReleaseUpdateWithNestedWhereUniqueInput {
+    "Document to update"
+    data: ReleaseUpdateInput!
+    "Unique document search"
+    where: ReleaseWhereUniqueInput!
+}
+
+input ReleaseUpsertInput {
+    "Create document if it didn't exist"
+    create: ReleaseCreateInput!
+    "Update document if it exists"
+    update: ReleaseUpdateInput!
+}
+
+input ReleaseUpsertWithNestedWhereUniqueInput {
+    "Upsert data"
+    data: ReleaseUpsertInput!
+    "Unique document search"
+    where: ReleaseWhereUniqueInput!
+}
+
+"Identifies documents"
+input ReleaseWhereInput {
+    "Logical AND on all given filters."
+    AND: [ReleaseWhereInput!]
+    "Logical NOT on all given filters combined by AND."
+    NOT: [ReleaseWhereInput!]
+    "Logical OR on all given filters."
+    OR: [ReleaseWhereInput!]
+    "Contains search across all appropriate fields."
+    _search: String
+    createdAt: DateTime
+    "All values greater than the given value."
+    createdAt_gt: DateTime
+    "All values greater than or equal the given value."
+    createdAt_gte: DateTime
+    "All values that are contained in given list."
+    createdAt_in: [DateTime!]
+    "All values less than the given value."
+    createdAt_lt: DateTime
+    "All values less than or equal the given value."
+    createdAt_lte: DateTime
+    "All values that are not equal to given value."
+    createdAt_not: DateTime
+    "All values that are not contained in given list."
+    createdAt_not_in: [DateTime!]
+    id: ID
+    "All values containing the given string."
+    id_contains: ID
+    "All values ending with the given string."
+    id_ends_with: ID
+    "All values that are contained in given list."
+    id_in: [ID!]
+    "All values that are not equal to given value."
+    id_not: ID
+    "All values not containing the given string."
+    id_not_contains: ID
+    "All values not ending with the given string"
+    id_not_ends_with: ID
+    "All values that are not contained in given list."
+    id_not_in: [ID!]
+    "All values not starting with the given string."
+    id_not_starts_with: ID
+    "All values starting with the given string."
+    id_starts_with: ID
+    publishedAt: DateTime
+    "All values greater than the given value."
+    publishedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    publishedAt_gte: DateTime
+    "All values that are contained in given list."
+    publishedAt_in: [DateTime!]
+    "All values less than the given value."
+    publishedAt_lt: DateTime
+    "All values less than or equal the given value."
+    publishedAt_lte: DateTime
+    "All values that are not equal to given value."
+    publishedAt_not: DateTime
+    "All values that are not contained in given list."
+    publishedAt_not_in: [DateTime!]
+    updatedAt: DateTime
+    "All values greater than the given value."
+    updatedAt_gt: DateTime
+    "All values greater than or equal the given value."
+    updatedAt_gte: DateTime
+    "All values that are contained in given list."
+    updatedAt_in: [DateTime!]
+    "All values less than the given value."
+    updatedAt_lt: DateTime
+    "All values less than or equal the given value."
+    updatedAt_lte: DateTime
+    "All values that are not equal to given value."
+    updatedAt_not: DateTime
+    "All values that are not contained in given list."
+    updatedAt_not_in: [DateTime!]
+}
+
+"References Release record uniquely"
+input ReleaseWhereUniqueInput {
+    id: ID
+}
+
 input UnpublishLocaleInput {
     "Locales to unpublish"
     locale: Locale!
@@ -1636,23 +2990,23 @@ input VersionWhereInput {
 }
 
 
-scalar RGBATransparency
-
-"Slate-compatible RichText AST"
-scalar RichTextAST
+"Raw JSON value"
+scalar Json
 
 "A date string, such as 2007-12-03 (YYYY-MM-DD), compliant with ISO 8601 standard for representation of dates using the Gregorian calendar."
 scalar Date
 
-"Raw JSON value"
-scalar Json
-
 scalar RGBAHue
 
-scalar Hex
+scalar RGBATransparency
+
+"The Long scalar type represents non-fractional signed whole numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
 
 "A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the date-timeformat outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representationof dates and times using the Gregorian calendar."
 scalar DateTime
 
-"The Long scalar type represents non-fractional signed whole numeric values. Long can represent values between -(2^63) and 2^63 - 1."
-scalar Long
+"Slate-compatible RichText AST"
+scalar RichTextAST
+
+scalar Hex
