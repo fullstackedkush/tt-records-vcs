@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 
 const ReleaseWrapper = styled.section`
 position: relative;
@@ -222,34 +223,38 @@ const CompactContainer = styled.div`
     `
 
 
-const Releases = () => {
-    return <ReleaseWrapper>
-    <div class="image__container">
-        <img src="https://media.graphcms.com/MikSrCwRayAXa89yrJvF" alt="tt and nts album" />
-    </div>
-    <div class="text__container">
-        <div class="content__container">
-            <p class="category">Release</p>
-            <date class="date">Added March 20th 2020</date>
-        </div>
-        <h2 class="title">Matters of Ascension</h2>
-        <h2 class="subtitle">by Thammudu & Mishti</h2>
-        <p class="text">Sonically haunted by the ghostly remains of identity, the project questions the potential and limitations of spirituality to leverage material reality. Released February 28, 2020</p>
-        <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed=%2Ftobagotracks%2Fttm057-cvn%2F"></iframe>
-    </div>
-
-    <CompactContainer>
-            <div className="text__container">
-                <h2 className="subtitle">Matters of Ascension</h2>
-                <h2 className="title">by Thammudu & Mishti</h2>
-                <div className="content__container">
-                    <p className="category category__mobile">Release</p>
-                    <date className="date">Added March 20th 2020</date>
-                    <p className="category category__desktop">Release</p>
-                </div>
+const Releases = ({id}) => {
+    return (
+        <Link href={`/release/${id}`}>
+        <ReleaseWrapper>
+            <div class="image__container">
+                <img src="https://media.graphcms.com/MikSrCwRayAXa89yrJvF" alt="tt and nts album" />
             </div>
-        </CompactContainer>
-    </ReleaseWrapper>
+            <div class="text__container">
+                <div class="content__container">
+                    <p class="category">Release</p>
+                    <date class="date">Added March 20th 2020</date>
+                </div>
+                <h2 class="title">Matters of Ascension</h2>
+                <h2 class="subtitle">by Thammudu & Mishti</h2>
+                <p class="text">Sonically haunted by the ghostly remains of identity, the project questions the potential and limitations of spirituality to leverage material reality. Released February 28, 2020</p>
+                <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed=%2Ftobagotracks%2Fttm057-cvn%2F"></iframe>
+            </div>
+
+            <CompactContainer>
+                <div className="text__container">
+                    <h2 className="subtitle">Matters of Ascension</h2>
+                    <h2 className="title">by Thammudu & Mishti</h2>
+                    <div className="content__container">
+                        <p className="category category__mobile">Release</p>
+                        <date className="date">Added March 20th 2020</date>
+                        <p className="category category__desktop">Release</p>
+                    </div>
+                </div>
+            </CompactContainer>
+        </ReleaseWrapper>
+        </Link>
+    )
 }
 
 export default Releases
