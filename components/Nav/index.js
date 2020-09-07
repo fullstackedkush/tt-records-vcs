@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React, {useState} from "react";
 
 
 
@@ -44,7 +45,6 @@ const MobileFilter = styled.div`
     display: none;
 }
     display: flex;
-    display: none;
     width: 100%;
     background-color: purple;
     color: white;
@@ -57,6 +57,9 @@ const MobileFilter = styled.div`
     padding-bottom: 32px;
     padding-right: 20px;
     border-bottom: 1px solid white;
+        opacity: ${props => props.show ? 1 : 0};
+    visibility: ${props => props.show ? 'visible' : 'hidden'};
+    z-index: 1;
 
 form {
     height: 100%;
@@ -376,79 +379,57 @@ label span:after {
 
 
 
-const Nav = ({title, children}) => (
-<NavWrapper>
+const Nav = ({title, children, setShow, changeCategory , filters}) => {
 
-<NavContainer>
-    
-        <Logo><a href="#"><img src="https://media.graphcms.com/WMGtnEUQ3GYWQcKDQHdn" alt="" /></a></Logo>
+    const [filterOpen, setFilterOpen] = useState(false);
 
-        <Menu>
-            <MenuPages>
-                <li><a href="#">Artists</a></li>
-                <li><a href="#">Shop</a></li>
-                <li><a href="#">About</a></li>
-                <li className=""><a href="#">Search</a><img src="https://media.graphcms.com/eDrHGLAQbW1Px8TAEVKg" /><input type="search" /></li>
-            </MenuPages>
+    console.log(filterOpen)
+    return (
+        <NavWrapper>
 
-            <MobileMenuPages>
-                <li><a className="filter" href="#">Filter</a></li>
-                <li><a className="menu" href="#">Menu<span></span></a></li>
-            </MobileMenuPages>
+            <NavContainer>
 
+                <Logo><a href="#"><img src="https://media.graphcms.com/WMGtnEUQ3GYWQcKDQHdn" alt="" /></a></Logo>
 
-            <NavHub title="">
-                <p>{title}</p>
-                {children}
-            </NavHub>
+                <Menu>
+                    <MenuPages>
+                        <li><a href="#">Artists</a></li>
+                        <li><a href="#">Shop</a></li>
+                        <li><a href="#">About</a></li>
+                        <li className=""><a href="#">Search</a><img src="https://media.graphcms.com/eDrHGLAQbW1Px8TAEVKg" /><input type="search" /></li>
+                    </MenuPages>
 
-        </Menu>
-        </NavContainer>
-
-        <MobileFilter>
-    <form>
-        <label>
-            <input type="radio" value="releases" name="filter" />
-            Releases
-            <span></span>
-        </label>
-
-        <label>
-            <input type="radio" value="video" name="filter" />
-            Video
-            <span></span>
-        </label>
+                    <MobileMenuPages>
+                        <li><a className="filter" href="#" onClick={() => setFilterOpen(!filterOpen)}>Filter</a></li>
+                        <li><a className="menu" href="#" onClick={() => setShow(true)}>Menu<span></span></a></li>
+                    </MobileMenuPages>
 
 
-        <label>
-            <input type="radio" value="editorial" name="filter" />
-            Editorial
-            <span></span>
-        </label>
+                    <NavHub title="">
+                        <p>{title}</p>
+                        {children}
+                    </NavHub>
 
-        <label>
-            <input type="radio" value="events" name="filter" />
-            Events
-            <span></span>
-        </label>
+                </Menu>
+            </NavContainer>
 
-        <label>
-            <input type="radio" value="radio" name="filter" />
-            Radio
-            <span></span>
-        </label>
+            <MobileFilter show={filterOpen}>
+                <form>
+                    {filters.map(v => (
+                        <label key={v.value}>
+                            <input type="radio" value={v.value} name="filter" onChange={changeCategory} />
+                            {v.label}
+                            <span/>
+                        </label>
+                    ))}
+                </form>
 
-        <label>
-            <input type="radio" value="all" name="filter" />
-            Clear All
-        </label>
-    </form>
 
-    
-</MobileFilter>
+            </MobileFilter>
 
-    </NavWrapper>
-);
+        </NavWrapper>
+    );
+}
 
 
 export default Nav;

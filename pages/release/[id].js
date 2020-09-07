@@ -414,26 +414,35 @@ const Release = ({id, title})  => {
 
 
 
-export async function getServerSideProps({ params, res }) {
+export async function getStaticProps({ params }) {
     const apolloClient = initializeApollo();
 
-    const release = await apolloClient.query({
+    const { data: { post } } = await apolloClient.query({
         query: GetPostDocument,
         variables: {
             id: params.id,
         }
     })
 
-    const { data: { post } } = release;
-
-    if (!post) {
-        res.statusCode = 404
-        res.end('Not found')
-        return
-    }
-
-    return { props: { ...release.data.post } }
+    return { props: { ...post }, revalidate: 1 }
 }
 
+
+export async function getStaticPaths() {
+    const apolloClient = initializeApollo();
+
+    const {data: { posts }} = await apolloClient.query({
+        query: GetPostsDocument,
+        variables: {
+            where: {
+                category: 'release'
+            }
+        }
+    });
+
+    const paths = posts.map(v => `/release/${v.id}`)
+
+    return { paths, fallback: false }
+}
 
 export default Release;

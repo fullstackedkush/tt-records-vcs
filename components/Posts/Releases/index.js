@@ -223,7 +223,7 @@ const CompactContainer = styled.div`
     `
 
 
-const Releases = ({id}) => {
+const Releases = ({id, title}) => {
     return (
         <Link href={`/release/${id}`}>
         <ReleaseWrapper>
@@ -235,7 +235,7 @@ const Releases = ({id}) => {
                     <p class="category">Release</p>
                     <date class="date">Added March 20th 2020</date>
                 </div>
-                <h2 class="title">Matters of Ascension</h2>
+                <h2 class="title">{title}</h2>
                 <h2 class="subtitle">by Thammudu & Mishti</h2>
                 <p class="text">Sonically haunted by the ghostly remains of identity, the project questions the potential and limitations of spirituality to leverage material reality. Released February 28, 2020</p>
                 <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed=%2Ftobagotracks%2Fttm057-cvn%2F"></iframe>

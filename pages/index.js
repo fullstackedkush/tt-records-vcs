@@ -24,7 +24,7 @@ const Home = ()  => {
     const {data, loading, refetch} = useGetPostsQuery()
 
     const changeCategory = (e) => {
-        const {value} = e.target;
+        const { value } = e.target;
         refetch({
             where: {
                 ...(value !== 'all' ? {
@@ -35,6 +35,7 @@ const Home = ()  => {
     }
 
     const [view, setView] = useState('full');
+    const [show, setShow] = useState(false);
 
     const filters = [
         {
@@ -73,7 +74,7 @@ const Home = ()  => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Nav>
+            <Nav setShow={setShow} changeCategory={changeCategory} filters={filters}>
                 <form>
                     {filters.map(v => (
                         <label key={v.value}>
@@ -102,7 +103,7 @@ const Home = ()  => {
                     </ul>
                 </div>
             </Hero>
-            <Overlay/>
+            <Overlay show={show} setShow={setShow} />
             <ContainerWrapper>
                 {data.posts.map(v => (
                     <>

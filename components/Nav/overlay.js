@@ -11,8 +11,9 @@ const OverlayContainer = styled.div`
     bottom: 0;
     background-color: #111; /* Black background with opacity */
     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    display: none;
-
+    opacity: ${props => props.show ? 1 : 0};
+    visibility: ${props => props.show ? 'visible' : 'hidden'};
+    transition: all .4s ease-in-out;
     ul {
         position: absolute;
         font-size: 50px;
@@ -77,8 +78,9 @@ const OverlayContainer = styled.div`
         font-size: 24px;
       }
 `
-const Overlay = () => (
-    <OverlayContainer>
+const Overlay = ({ show, setShow }) => (
+    <OverlayContainer show={show}>
+        <p onClick={() => setShow(false)}>close</p>
         <ul>
             <li><a href="#">Artists</a></li>
             <li><a href="#">Shop</a></li>
