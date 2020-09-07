@@ -229,7 +229,7 @@ const CompactContainer = styled.div`
 
 `
 
-const Radio = ({title, subtitle, image}) => {
+const Radio = ({title, subtitle, image, props}) => {
     return <Wrapper>
         <FullContainer>
             <ImageContainer>

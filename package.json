@@ -21,7 +21,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-video-js-player": "^1.1.1",
-    "styled-components": "latest"
+    "styled-components": "latest",
+    "video-react": "^0.14.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",

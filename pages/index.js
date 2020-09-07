@@ -11,7 +11,6 @@ import FooterWrapper from "../components/Footer";
 import styled from "styled-components";
 import {GetPostsDocument, useGetPostsQuery} from "../schema";
 import {initializeApollo} from "../utilites";
-import {useState} from "react";
 
 const ContainerWrapper = styled.div`
   max-width: 1140px;
@@ -21,7 +20,6 @@ const ContainerWrapper = styled.div`
 
 const Home = ()  => {
     const {data, loading, refetch} = useGetPostsQuery()
-
 
     const changeCategory = (e) => {
         const {value} = e.target;
@@ -67,7 +65,7 @@ console.log(data)
     return (
         <>
             <Head>
-                <title>TT records homepage</title>
+                <title>TT records | Homepage</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
@@ -82,8 +80,6 @@ console.log(data)
                     ))}
                 </form>
             </Nav>
-
-
             <Hero title="London Record Label & Occasional Function. Extra Text to bring it to a 2nd line.">
                 <div className="info__option">
                     <p>View in:</p>

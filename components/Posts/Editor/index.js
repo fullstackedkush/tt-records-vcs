@@ -195,12 +195,12 @@ const CompactContainer = styled.div`
 
 const Editor = () => {
     return <Wrapper>
-    <div class="text__container">
-        <h2 class="subtitle">The Quietus Reviews:</h2>
-        <h2 class="title">Thammudu & Mishti - MATTERS OF ASCENSION</h2>
-        <div class="content__container">
-            <p class="category">Editor</p>
-            <date class="date">Added June 27th 2019</date>
+    <div className="text__container">
+        <h2 className="subtitle">The Quietus Reviews:</h2>
+        <h2 className="title">Thammudu & Mishti - MATTERS OF ASCENSION</h2>
+        <div className="content__container">
+            <p className="category">Editor</p>
+            <date className="date">Added June 27th 2019</date>
         </div>
     </div>
         <CompactContainer>

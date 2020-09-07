@@ -54,7 +54,8 @@ const Wrapper = styled.div`
     }
 `
 
-const Hero = ({ title, children }) => (
+const Hero = ({ title, children, props }) => (
+
     <Wrapper bg={'#111'}>
         <h1>{ title }</h1>
         { children }
