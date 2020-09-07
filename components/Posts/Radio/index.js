@@ -229,8 +229,9 @@ const CompactContainer = styled.div`
 
 `
 
-const Radio = ({title, subtitle, image, props}) => {
+const Radio = ({title, subtitle, image, view }) => {
     return <Wrapper>
+        {view === 'full' ? (
         <FullContainer>
             <ImageContainer>
                 {image && (
@@ -247,6 +248,7 @@ const Radio = ({title, subtitle, image, props}) => {
                 </div>
             </div>
         </FullContainer>
+        ) : (
         <CompactContainer>
             <div className="text__container">
                 <h2 className="subtitle">On NTS:</h2>
@@ -258,6 +260,7 @@ const Radio = ({title, subtitle, image, props}) => {
                 </div>
             </div>
         </CompactContainer>
+        )}
     </Wrapper>
 };
 

@@ -11,6 +11,8 @@ import FooterWrapper from "../components/Footer";
 import styled from "styled-components";
 import {GetPostsDocument, useGetPostsQuery} from "../schema";
 import {initializeApollo} from "../utilites";
+import React, {useState} from 'react';
+
 
 const ContainerWrapper = styled.div`
   max-width: 1140px;
@@ -31,6 +33,8 @@ const Home = ()  => {
             }
         })
     }
+
+    const [view, setView] = useState('full');
 
     const filters = [
         {
@@ -61,7 +65,7 @@ const Home = ()  => {
 
 
     if(!data || loading) return <>Loading</>
-console.log(data)
+
     return (
         <>
             <Head>
@@ -84,17 +88,26 @@ console.log(data)
                 <div className="info__option">
                     <p>View in:</p>
                     <ul>
-                        <li className="full"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="14" height="14" fill="white"/></svg>Full</li>
-                        <li className="compact"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="14" height="2" fill="white"/><rect y="4" width="14" height="2" fill="white"/><rect y="8" width="14" height="2" fill="white"/><rect y="12" width="14" height="2" fill="white"/></svg>Compact</li>
+                        <li className={view === 'full' ? 'active full' : 'full'} onClick={() => setView('full')}>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="14" height="14" fill="white"/></svg>
+                            Full
+                        </li>
+                        <li className={view === 'compact' ? 'active compact' : 'compact'} onClick={() => setView('compact')}>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="14" height="2" fill="white"/><rect y="4" width="14" height="2" fill="white"/>
+                                <rect y="8" width="14" height="2" fill="white"/><rect y="12" width="14" height="2" fill="white"/></svg>
+                            Compact
+                        </li>
                     </ul>
                 </div>
             </Hero>
-            <Overlay></Overlay>
+            <Overlay/>
             <ContainerWrapper>
                 {data.posts.map(v => (
                     <>
                         {v.category === 'radio' && (
-                            <Radio {...v} key={v.id}/>
+                            <Radio {...v} key={v.id} view={view}/>
                         )}
                         {v.category === 'editorial' && (
                             <Editor {...v} key={v.id}/>
@@ -111,7 +124,7 @@ console.log(data)
                     </>
                 ))}
             </ContainerWrapper>
-            <FooterWrapper></FooterWrapper>
+            <FooterWrapper/>
         </>
     )
 }
