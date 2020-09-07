@@ -25,17 +25,6 @@ const ContainerWrapper = styled.div`
 const Artists = (id, title)  => {
     const {data, loading, refetch} = useGetPostsQuery()
 
-    const changeCategory = (e) => {
-        const {value} = e.target;
-        refetch({
-            where: {
-                ...(value !== 'all' ? {
-                    category: value
-                } : {})
-            }
-        })
-    }
-
 
     if(!data || loading) return <>Loading</>
 
@@ -67,29 +56,19 @@ const Artists = (id, title)  => {
 }
 
 
+export async function getStaticProps() {
+    const apolloClient = initializeApollo()
 
-
-export async function getServerSideProps({ params, res }) {
-    const apolloClient = initializeApollo();
-
-    const release = await apolloClient.query({
-        query: GetPostDocument,
-        variables: {
-            id: params.id,
-        }
+    await apolloClient.query({
+        query: GetPostsDocument,
     })
 
-    const { data: { post } } = release;
-
-    if (!post) {
-        res.statusCode = 404
-        res.end('Not found')
-        return
+    return {
+        props: {
+            initialApolloState: apolloClient.cache.extract(),
+        },
+        revalidate: 1,
     }
-
-    return { props: { ...release.data.post } }
 }
-
-
 
 export default Artists;
