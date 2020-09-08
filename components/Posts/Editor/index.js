@@ -1,84 +1,135 @@
 import styled from "styled-components";
 
-const Wrapper = styled.section`
+const FullContainer = styled.div`
+position: relative;
+margin-bottom: 38px;
+padding-bottom: 38px;
+
+div.content__container, h2.title, h2.subtitle, p.text {
+    margin-bottom: 8px;
+}
+
+h2.title + h2.subtitle {
+    margin-top: -8px;
+}
+
+@media only screen and (min-width: 800px) {
+    margin-bottom: 59px;
+}
+
+h2.subtitle {
+    font-family: 'Nimbus Sans L';
+    font-weight: regular;
+    font-size: 32px;
+    letter-spacing: -0.96px;
+    line-height: 48px;
+    margin-bottom: 8px;
+}
+
+h2.title {
+    font-family: 'Nimbus Sans L';
+    font-weight: bold;
+    font-size: 48px;
+    letter-spacing: -1.14px;
+    line-height: 45px;
+    margin-bottom: 8px;
+}
+
+@media only screen and (min-width: 1000px) {
+    .content__container {
+        position: relative;
+    }
+}
+
+.category {
+    font-family: 'Nimbus Sans L';
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: -0.48px;
+    line-height: 24px;
+    display: inline-block;
+    background: #111;
+    color: white;
+    padding: 0 3px;
     position: relative;
-    margin-bottom: 38px;
-    @media only screen and (min-width: 800px) {
-        margin-bottom: 38px;
+    margin-right: 16px;
+
+    &:after {
+        content: "\u25AA";
+        display: inline-block;
+        color: black;
+        position: absolute;
+        right: -10px;
+        font-size: 10px;
+    }
+}
+
+.date {
+    display: inline-block;
+}
+
+
+@media only screen and (max-width: 800px) {
+
+    h2.subtitle {
+        font-family: 'Nimbus Sans L';
+        font-weight: regular;
+        font-size: 22px;
+        letter-spacing: -0.66px;
+        line-height: 33px;
+    }
+    h2.title {
+        font-family: 'Nimbus Sans L';
+        font-weight: bold;
+        font-size: 28px;
+        letter-spacing: -0.84px;
+        line-height: 39px;
     }
 
-    .text__container {
-        @media only screen and (min-width: 800px) {
-            margin-bottom: 59px;
-        }
+    date {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
     }
+    p.category {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
+    img {
+        margin-bottom: 16px;
+    }
+}
+
+
+`
+
+const Wrapper = styled.section`
+    position: relative;
 
     &:after {
         content: "";
         background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
         min-width: 100%;
         display: block;
-        height: 20px;
+        height: 1px;
         background-repeat: repeat-x;
-        margin-top: 30px;
         position: absolute;
         left: 0;
-        bottom: -30px;
-    }
+        bottom: 0px;
+    }   
 
-    h2.subtitle {
-        font-family: 'Nimbus Sans L';
-        font-weight: regular;
-        font-size: 32px;
-        letter-spacing: -0.96px;
-        line-height: 48px;
-    }
 
-    h2.title {
-        font-family: 'Nimbus Sans L';
-        font-weight: bold;
-        font-size: 48px;
-        letter-spacing: -1.14px;
-        line-height: 45px;
-    }
-
-    @media only screen and (min-width: 1000px) {
-        .content__container {
-            position: relative;
-        }
-    }
-
-    .category {
-        font-family: 'Nimbus Sans L';
-        font-weight: bold;
-        font-size: 16px;
-        letter-spacing: -0.48px;
-        line-height: 24px;
-        display: inline-block;
-        background: #111;
-        color: white;
-        padding: 0 3px;
-        position: relative;
-        margin-right: 10px;
-
-        &:after {
-            content: "\u25AA";
-            display: inline-block;
-            color: black;
-            position: absolute;
-            right: -10px;
-        }
-    }
-
-    .date {
-        display: inline-block;
-    }
 `
 
 const CompactContainer = styled.div`
 
     min-width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 16px;
 
     .text__container {
         display: flex;
@@ -193,27 +244,34 @@ const CompactContainer = styled.div`
 
     `
 
-const Editor = () => {
+
+
+const Editor = ({title, subtitle, view, publishedDate }) => {
     return <Wrapper>
-    <div className="text__container">
-        <h2 className="subtitle">The Quietus Reviews:</h2>
-        <h2 className="title">Thammudu & Mishti - MATTERS OF ASCENSION</h2>
-        <div className="content__container">
-            <p className="category">Editor</p>
-            <date className="date">Added June 27th 2019</date>
-        </div>
-    </div>
+    {view === 'full' ? (
+        <FullContainer>
+            <div className="text__container">
+                <h2 className="subtitle">{subtitle}</h2>
+            <h2 className="title">{title}</h2>
+                <div className="content__container">
+                    <p className="category">Editor</p>
+                    <date className="date">Added {publishedDate}</date>
+                </div>
+            </div>
+        </FullContainer>
+    ) : (
         <CompactContainer>
             <div className="text__container">
-                <h2 className="subtitle">The Quietus Reviews:</h2>
-                <h2 className="title">Thammudu & Mishti - MATTERS OF ASCENSION</h2>
+                <h2 className="subtitle">{subtitle}</h2>
+                <h2 className="title">{title}</h2>
                 <div className="content__container">
                     <p className="category category__mobile">Editor</p>
-                    <date className="date">Added June 27th 2019</date>
+                    <date className="date">Added {publishedDate}</date>
                     <p className="category category__desktop">Editor</p>
                 </div>
             </div>
         </CompactContainer>
+        )}
 </Wrapper>
 }
 

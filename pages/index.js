@@ -17,7 +17,16 @@ import React, {useState} from 'react';
 const ContainerWrapper = styled.div`
   max-width: 1140px;
   padding: 0 1rem;
-  margin: 1rem auto 80px;
+  margin: 2rem auto 60px;
+  flex: 1;
+  @media screen and (min-width: 1000px) {
+    margin: 70px auto 80px;
+  }
+
+  section:last-of-type > div:after {
+    display: none;
+}
+
 `
 
 const Home = ()  => {
@@ -111,16 +120,16 @@ const Home = ()  => {
                             <Radio {...v} key={v.id} view={view}/>
                         )}
                         {v.category === 'editorial' && (
-                            <Editor {...v} key={v.id}/>
+                            <Editor {...v} key={v.id} view={view}/>
                         )}
                         {v.category === 'release' && (
-                            <Releases {...v} key={v.id}/>
+                            <Releases {...v} key={v.id} view={view}/>
                         )}
                         {v.category === 'event' && (
-                            <Event {...v} key={v.id}/>
+                            <Event {...v} key={v.id} view={view}/>
                         )}
                         {v.category === 'video' && (
-                            <Video {...v} key={v.id}/>
+                            <Video {...v} key={v.id} view={view}/>
                         )}
                     </>
                 ))}

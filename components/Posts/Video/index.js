@@ -1,26 +1,29 @@
 import styled from "styled-components";
 
-const VideoContainer = styled.section`
-    position: relative;
+const FullContainer = styled.div`
+position: relative;
+padding-bottom: 38px;
+margin-bottom: 38px;
 
-    @media only screen and (min-width: 800px) {
-        margin-bottom: 59px;
-    }
+@media only screen and (min-width: 800px) {
+    margin-bottom: 59px;
+}
 
-    margin-bottom: 38px;
-    
-    &:after {
-        content: "";
-        background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
-        min-width: 100%;
-        display: block;
-        height: 20px;
-        background-repeat: repeat-x;
-        margin-top: 30px;
-        position: absolute;
-        left: 0;
-        bottom: -30px;
-    }
+&:after {
+    content: "";
+    background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
+    min-width: 100%;
+    display: block;
+    height: 20px;
+    background-repeat: repeat-x;
+    margin-top: 30px;
+    position: absolute;
+    left: 0;
+    bottom: -30px;
+}
+`
+
+const VideoWrapper = styled.section`
 
     video {
         width: 100%;
@@ -79,7 +82,6 @@ const VideoContainer = styled.section`
         background-image: url(../img/square-bg-spaced.png);
         min-width: 100%;
     }
-
 
     .video__description.hide {
         visibility: hidden;
@@ -307,46 +309,46 @@ const CompactContainer = styled.div`
 
     `
 
-const Video = () => {
+const Video = ({title, subtitle, image, view, link, publishedDate }) => {
     
-    return <VideoContainer>
+    return <VideoWrapper>
+{view === 'full' ? (
+    <FullContainer>
+        <video controls
+        src={link}
+        poster={image.url} className="video">
 
-    <video controls
-    src="https://media.graphcms.com/3L8GNmIESqW6Y4PhefW8"
-    poster="https://media.graphcms.com/IFzNniGhRRi5cPqeARVa" class="video">
+        </video>
 
-    Sorry, your browser doesn't support embedded videos, but don't worry, you can
-    <a href="https://archive.org/details/BigBuckBunny_124">download it</a> 
-    and watch it with your favorite video player!
-
-    </video>
-
-    <div className="video__description">
-        <div className="video__inner__description">
-            <div className="play__video">
-                <div className="play__circle">
-                    <div className="play__txt">Play Video</div>
+        <div className="video__description">
+            <div className="video__inner__description">
+                <div className="play__video">
+                    <div className="play__circle">
+                        <div className="play__txt">Play Video</div>
+                    </div>
+                </div>
+                <div className="detail__container">
+                    <h2 className="detail__title">Official Video</h2>
+                        <h2 className="title">{title}</h2>
+                        <h2 className="subtitle">{subtitle}</h2>
                 </div>
             </div>
-            <div className="detail__container">
-                <h2 className="detail__title">Official Video</h2>
-                <h2 className="title">Betablockers</h2>
-                <h2 className="subtitle">Symrun</h2>
-            </div>
         </div>
-    </div>
-
+    </FullContainer>
+    ) : (
     <CompactContainer>
             <div className="text__container">
-                <h2 className="title">Symrun - Betablockers</h2>
+                <h2 className="subtitle">{subtitle}</h2>
+                <h2 className="title">{title}</h2>
                 <div className="content__container">
                     <p className="category category__mobile">Video</p>
-                    <date className="date">Added March 20th 2020</date>
+                    <date className="date">Added {publishedDate}</date>
                     <p className="category category__desktop">Video</p>
                 </div>
             </div>
         </CompactContainer>
-</VideoContainer>
+    )}
+</VideoWrapper>
 }
 
 export default Video

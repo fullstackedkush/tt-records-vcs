@@ -13,6 +13,7 @@ const Wrapper = styled.div`
 background-color: #111;
 padding-top: 4rem;
 padding-bottom: 3rem;
+flex: 1;
 `
 
 const ContainerWrapper = styled.div`
@@ -36,7 +37,6 @@ console.log(data)
 
             <Nav>
                 <Marquee>Marquee rocks!</Marquee>
-
             </Nav>
             <Overlay/>
             <Wrapper>

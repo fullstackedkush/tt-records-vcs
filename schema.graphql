@@ -4,7 +4,8 @@ fragment Post on Post {
     subtitle
     category
     link
-    publishedAt
+    publishedDate
+    dateAdded
     image {
         url
     }

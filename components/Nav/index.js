@@ -423,8 +423,6 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                         </label>
                     ))}
                 </form>
-
-
             </MobileFilter>
 
         </NavWrapper>

@@ -1,29 +1,68 @@
 import styled from "styled-components";
 import Link from "next/link";
 
-const ReleaseWrapper = styled.section`
+const FullContainer = styled.div`
+
 position: relative;
+margin-bottom: 38px;
+padding-bottom: 38px;
+
+div.content__container, h2.title, h2.subtitle, p.text {
+    margin-bottom: 8px;
+}
+
+h2.title + h2.subtitle {
+    margin-top: -8px;
+}
+
+iframe {
+    max-width: 450px;
+    margin-top: 20px;
+}
+
 @media only screen and (min-width: 800px) {
     margin-bottom: 59px;
 }
 
-margin-bottom: 38px;
-
-&:after {
-    content: "";
-    background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
-    min-width: 100%;
-    display: block;
-    height: 20px;
-    background-repeat: repeat-x;
-    margin-top: 30px;
-    position: absolute;
-    left: 0;
-    bottom: -30px;
-}
-
 @media only screen and (min-width: 800px) {
     display: flex;
+}
+
+@media only screen and (max-width: 800px) {
+
+    img {
+        margin-bottom: 16px;
+    }
+
+    .subtitle {
+        font-family: 'Nimbus Sans L';
+        font-weight: regular;
+        font-size: 22px;
+        letter-spacing: -0.66px;
+        line-height: 33px;
+    }
+    .title {
+        font-family: 'Nimbus Sans L';
+        font-weight: bold;
+        font-size: 28px;
+        letter-spacing: -0.84px;
+        line-height: 39px;
+    }
+
+    date {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
+    .category {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
 }
 
 .image__container {
@@ -40,6 +79,7 @@ margin-bottom: 38px;
         align-content: center;
         justify-content: center;
         margin-left: 70px;
+        width: 100%;
     }
 }
 
@@ -85,7 +125,7 @@ p.text {
     color: white;
     padding: 0 3px;
     position: relative;
-    margin-right: 10px;
+    margin-right: 16px;
 
     &:after {
         content: "\u25AA";
@@ -101,12 +141,65 @@ p.text {
     display: inline-block;
 }
 
+@media only screen and (max-width: 800px) {
+
+    h2.subtitle {
+        font-family: 'Nimbus Sans L';
+        font-weight: regular;
+        font-size: 22px;
+        letter-spacing: -0.66px;
+        line-height: 33px;
+    }
+    h2.title {
+        font-family: 'Nimbus Sans L';
+        font-weight: bold;
+        font-size: 28px;
+        letter-spacing: -0.84px;
+        line-height: 39px;
+    }
+
+    date {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
+    p.category {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
+}
+
+
+
+`
+
+
+const ReleaseWrapper = styled.section`
+position: relative;
+
+&:after {
+    content: "";
+    background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
+    min-width: 100%;
+    display: block;
+    height: 1px;
+    background-repeat: repeat-x;
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+} 
+
 `
 
 const CompactContainer = styled.div`
 
     min-width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 16px;
 
     .text__container {
         display: flex;
@@ -223,35 +316,39 @@ const CompactContainer = styled.div`
     `
 
 
-const Releases = ({id, title}) => {
+const Releases = ({id, title, subtitle, content, image, view, link, publishedDate}) => {
     return (
         <Link href={`/release/${id}`}>
         <ReleaseWrapper>
+        {view === 'full' ? (
+            <FullContainer>
             <div class="image__container">
-                <img src="https://media.graphcms.com/MikSrCwRayAXa89yrJvF" alt="tt and nts album" />
+                <img src={image.url} alt={title} />
             </div>
             <div class="text__container">
                 <div class="content__container">
                     <p class="category">Release</p>
-                    <date class="date">Added March 20th 2020</date>
+                    <date class="date">Added {publishedDate}</date>
                 </div>
                 <h2 class="title">{title}</h2>
-                <h2 class="subtitle">by Thammudu & Mishti</h2>
-                <p class="text">Sonically haunted by the ghostly remains of identity, the project questions the potential and limitations of spirituality to leverage material reality. Released February 28, 2020</p>
+                <h2 class="subtitle">{subtitle}</h2>
+                <p class="text"></p>
                 <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed=%2Ftobagotracks%2Fttm057-cvn%2F"></iframe>
             </div>
-
+            </FullContainer>
+            ) : (
             <CompactContainer>
                 <div className="text__container">
-                    <h2 className="subtitle">Matters of Ascension</h2>
-                    <h2 className="title">by Thammudu & Mishti</h2>
+                    <h2 className="subtitle">{title}</h2>
+                    <h2 className="title">{subtitle}</h2>
                     <div className="content__container">
                         <p className="category category__mobile">Release</p>
-                        <date className="date">Added March 20th 2020</date>
+                        <date className="date">Added {publishedDate}</date>
                         <p className="category category__desktop">Release</p>
                     </div>
                 </div>
             </CompactContainer>
+        )}
         </ReleaseWrapper>
         </Link>
     )

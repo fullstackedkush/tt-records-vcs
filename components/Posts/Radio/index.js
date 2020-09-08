@@ -3,23 +3,33 @@ import styled from "styled-components";
 const Wrapper = styled.section`
 position: relative;
 
-margin-bottom: 38px;
-
 &:after {
     content: "";
     background: url('data:image/svg+xml;utf8,<svg width="332" height="1" viewBox="0 0 332 1" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.14474 0.5H331.145" stroke="black" stroke-linecap="square" stroke-dasharray="1 2"/></svg>');
     min-width: 100%;
     display: block;
-    height: 20px;
+    height: 1px;
     background-repeat: repeat-x;
-    margin-top: 30px;
     position: absolute;
     left: 0;
-    bottom: -30px;
-}
+    bottom: 0px;
+} 
+
 `
 
 const FullContainer = styled.div`
+
+margin-bottom: 38px;
+padding-bottom: 38px;   
+
+
+div.content__container, h2.title, h2.subtitle, p.text {
+    margin-bottom: 8px;
+}
+
+h2.title + h2.subtitle {
+    margin-top: -8px;
+}
 
 @media only screen and (min-width: 800px) {
     margin-bottom: 59px;
@@ -27,6 +37,50 @@ const FullContainer = styled.div`
 
 @media only screen and (min-width: 800px) {
     display: flex;
+}
+
+@media only screen and (max-width: 800px) {
+    .text__container {
+        margin-top: 10px;
+    }
+        
+    .content__container {
+        margin-top: 10px;
+    }
+
+    img {
+        margin-bottom: 16px;
+    }
+
+    .subtitle {
+        font-family: 'Nimbus Sans L';
+        font-weight: regular;
+        font-size: 22px;
+        letter-spacing: -0.66px;
+        line-height: 33px;
+    }
+    .title {
+        font-family: 'Nimbus Sans L';
+        font-weight: bold;
+        font-size: 28px;
+        letter-spacing: -0.84px;
+        line-height: 39px;
+    }
+
+    date {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
+    .category {
+        font-family: 'Nimbus Sans L';
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: -0.48px;
+        line-height: 24px;
+    }
 }
 
     .text__container {
@@ -42,6 +96,7 @@ const FullContainer = styled.div`
         font-size: 32px;
         letter-spacing: -0.96px;
         line-height: 48px;
+        margin-bottom: 8px;
     }
     .title {
         font-family: 'Nimbus Sans L';
@@ -49,6 +104,7 @@ const FullContainer = styled.div`
         font-size: 38px;
         letter-spacing: -1.14px;
         line-height: 45px;
+        margin-bottom: 8px;
     }
     .content__container {
         position: relative;
@@ -65,7 +121,7 @@ const FullContainer = styled.div`
         color: white;
         padding: 0 3px;
         position: relative;
-        margin-right: 10px;
+        margin-right: 16px;
 
         &:after {
             content: "\u25AA";
@@ -73,6 +129,7 @@ const FullContainer = styled.div`
             color: black;
             position: absolute;
             right: -10px;
+            font-size: 10px;
         }   
     }
 
@@ -88,6 +145,42 @@ const FullContainer = styled.div`
             margin-left: 70px;
         }        
     }
+
+    @media only screen and (max-width: 800px) {
+
+        h2.subtitle {
+            font-family: 'Nimbus Sans L';
+            font-weight: regular;
+            font-size: 22px;
+            letter-spacing: -0.66px;
+            line-height: 33px;
+            margin-bottom: 8px;
+        }
+        h2.title {
+            font-family: 'Nimbus Sans L';
+            font-weight: bold;
+            font-size: 28px;
+            letter-spacing: -0.84px;
+            line-height: 39px;
+            margin-bottom: 8px;
+        }
+    
+        date {
+            font-family: 'Nimbus Sans L';
+            font-weight: 400;
+            font-size: 16px;
+            letter-spacing: -0.48px;
+            line-height: 24px;
+        }
+        p.category {
+            font-family: 'Nimbus Sans L';
+            font-weight: 400;
+            font-size: 16px;
+            letter-spacing: -0.48px;
+            line-height: 24px;
+        }
+    }
+    
 `
 const ImageContainer = styled.div`
 .play {
@@ -112,7 +205,7 @@ const ImageContainer = styled.div`
 const CompactContainer = styled.div`
 
     min-width: 100%;
-
+    margin-bottom: 16px;
 
     .text__container {
         display: flex;
@@ -124,7 +217,6 @@ const CompactContainer = styled.div`
 
         @media only screen and (min-width: 1000px) {
             flex-direction: row;  
-            margin-top: 30px;
             padding-bottom: 0;
         }
     }
@@ -229,7 +321,7 @@ const CompactContainer = styled.div`
 
 `
 
-const Radio = ({title, subtitle, image, view }) => {
+const Radio = ({ title, subtitle, image, view, publishedDate }) => {
     return <Wrapper>
         {view === 'full' ? (
         <FullContainer>
@@ -240,27 +332,27 @@ const Radio = ({title, subtitle, image, view }) => {
                 <svg className="play" width="75" height="75" viewBox="0 0 75 75" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M0 75V37.5V0H37.5H75V37.5V75H37.5H0ZM27 51L54 37.5L27 24V51Z" fill="#111111"/></svg>
             </ImageContainer>
             <div className="text__container">
-                <h2 className="subtitle">{subtitle}:</h2>
+                <h2 className="subtitle">{subtitle}</h2>
                 <h2 className="title">{title}</h2>
                 <div className="content__container">
                     <p className="category">Radio</p>
-                    <date className="date">Added March 20th 2020</date>
+                <date className="date">Added {publishedDate}</date>
                 </div>
             </div>
         </FullContainer>
         ) : (
         <CompactContainer>
             <div className="text__container">
-                <h2 className="subtitle">On NTS:</h2>
-                <h2 className="title">TT W/ DJ PITCH, GRIBS AND KAMAAHSHATEE</h2>
+                <h2 className="subtitle">{subtitle}</h2>
+                <h2 className="title">{title}</h2>
                 <div className="content__container">
                     <p className="category category__mobile">Radio</p>
-                    <date className="date">Added March 20th 2020</date>
+                    <date className="date">Added {publishedDate}</date>
                     <p className="category category__desktop">Radio</p>
                 </div>
             </div>
         </CompactContainer>
-        )}
+    )}
     </Wrapper>
 };
 

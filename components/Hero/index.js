@@ -10,14 +10,26 @@ const Wrapper = styled.div`
     h1 {
         font-family: 'Nimbus Sans L';
         font-weight: bold;
-        font-size: 48px;
+        font-size: 38px;
         letter-spacing: -1.44px;
-        line-height: 57px;
+        line-height: 47px;
         max-width: 1260px;
         padding-right: 50px;
         padding-top: 230px;
         color: white;
         text-transform: uppercase;
+    }
+
+    @media screen and (min-width: 1000px) {
+
+        h1 {
+        font-family: 'Nimbus Sans L';
+            font-weight: bold;
+            font-size: 48px;
+            letter-spacing: -1.44px;
+            line-height: 57px;
+        }
+
     }
 
     div {
