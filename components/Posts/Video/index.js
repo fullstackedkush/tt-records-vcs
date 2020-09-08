@@ -1,8 +1,8 @@
 import styled from "styled-components";
-
+import { Player } from 'video-react';
+import {useEffect, useState} from "react";
 const FullContainer = styled.div`
 position: relative;
-padding-bottom: 38px;
 margin-bottom: 38px;
 
 @media only screen and (min-width: 800px) {
@@ -111,7 +111,12 @@ const VideoWrapper = styled.section`
         flex-direction: column;
         justify-content: center;
     }
-
+    
+    .video__description {
+    background-position: center;
+    background-size: cover;
+    }
+    
     .video__description .play__video {
         min-width: 30%;
         display: flex;
@@ -310,17 +315,31 @@ const CompactContainer = styled.div`
     `
 
 const Video = ({title, subtitle, image, view, link, publishedDate }) => {
-    
+     const [player, setPlayer] = useState();
+     const [playing, setPlaying] = useState(false)
+     const handleStateChange = (state) => {
+         setPlaying(!state.paused)
+     }
+
+     useEffect(() => {
+         if(player) {
+             player.subscribeToStateChange(handleStateChange)
+         }
+     }, [player]);
+
+
     return <VideoWrapper>
 {view === 'full' ? (
     <FullContainer>
-        <video controls
-        src={link}
-        poster={image.url} className="video">
+        <Player
+            ref={(r) => setPlayer(r)}
+            playsInline
+            poster={image.url}
+            src={link}
+        />
 
-        </video>
-
-        <div className="video__description">
+        {player && !playing && (
+        <div className="video__description" onClick={() => player.play()} css={{backgroundImage: `url(${image.url})`}}>
             <div className="video__inner__description">
                 <div className="play__video">
                     <div className="play__circle">
@@ -334,6 +353,7 @@ const Video = ({title, subtitle, image, view, link, publishedDate }) => {
                 </div>
             </div>
         </div>
+        ) }
     </FullContainer>
     ) : (
     <CompactContainer>

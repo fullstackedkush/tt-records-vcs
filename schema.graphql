@@ -4,13 +4,19 @@ fragment Post on Post {
     subtitle
     category
     link
-    publishedDate
-    dateAdded
+    iframe
     image {
         url
     }
     content {
+        markdown
+    }
+    credits {
+        markdown
+    }
+    tracklist {
         raw
+        markdown
     }
 }
 

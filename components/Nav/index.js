@@ -400,7 +400,9 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                     </MenuPages>
 
                     <MobileMenuPages>
+                        {filters && (
                         <li><a className="filter" href="#" onClick={() => setFilterOpen(!filterOpen)}>Filter</a></li>
+                        )}
                         <li><a className="menu" href="#" onClick={() => setShow(true)}>Menu<span></span></a></li>
                     </MobileMenuPages>
 
@@ -413,6 +415,7 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                 </Menu>
             </NavContainer>
 
+            {filters && (
             <MobileFilter show={filterOpen}>
                 <form>
                     {filters.map(v => (
@@ -424,6 +427,7 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                     ))}
                 </form>
             </MobileFilter>
+            )}
 
         </NavWrapper>
     );

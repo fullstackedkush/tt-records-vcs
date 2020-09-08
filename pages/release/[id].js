@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useRouter } from 'next/router'
 import {initializeApollo} from "../../utilites";
 import {GetPostDocument, GetPostsDocument} from "../../schema";
+import ReactMarkdown from "react-markdown";
 
 const FeaturedRelease = styled.header`
 
@@ -346,8 +347,10 @@ const VideoComponentContainer = styled.div`
 
 
 
-const Release = ({id, title})  => {
+const Release = (props)  => {
+const {id, title, content, iframe, tracklist, credits} = props;
 
+console.log(props)
     return (
         <>
             <Head>
@@ -359,49 +362,51 @@ const Release = ({id, title})  => {
             <Overlay/>
 
     <FeaturedRelease>
-		 
-         <div class="content__container">
-             <div class="release__container">
-                 <p class="release__category">Digital</p>
-                 <date class="date">Released March 20th 2020</date>
+
+         <div className="content__container">
+             <div className="release__container">
+                 <p className="release__category">Digital</p>
+                 <date className="date">Released March 20th 2020</date>
              </div>
-         <h1 class="title">{title}</h1>
-         <h2>Joanna Pope</h2>   
-         <div class="desktop-bandcamp"><a href="#">Buy on Bandcamp</a></div>       
+         <h1 className="title">{title}</h1>
+         <h2>Joanna Pope</h2>
+         <div className="desktop-bandcamp"><a href="#">Buy on Bandcamp</a></div>
          </div>
- 
-         <div class="image__container"><img src="https://media.graphcms.com/op8Om5jgSAGE614eviRI" alt="" /></div>
-        
+
+         <div className="image__container"><img src="https://media.graphcms.com/op8Om5jgSAGE614eviRI" alt="" /></div>
+
     </FeaturedRelease>
-    
+
     <MobileBandcamp><a href="#">Buy on Bandcamp</a></MobileBandcamp>
         <TracklistContainer>
-             <section class="container no-margin featured__description__container">
-                 <section class="featured__release__description">
-                     <p class="lead">Debuting on TT, ‘Fantasias for Lock-In’ is Joanna Pope’s first release. This EP offers an eco-anxious variant of cheapcore and melodic noise.</p>
-                     <p>Foley–heavy worldbuilding is mostly avoided. Respects are paid instead to the orchestral preset and the sentimental harmonies that score sandbox gameplay and mass- market fantasy universes.</p>
-                     <p>Joanna Pope is an Australian-German researcher and writer. This music was made during a period of research into badly rendered ecomodernist futures, and the alternatives to these that degrowth might provide.</p>
+             <section className="container no-margin featured__description__container">
+                 <section className="featured__release__description">
+                     <ReactMarkdown source={content.markdown} />
+                     {iframe && (
+                     <iframe width="100%" height="60" src={iframe}></iframe>
+                     )}
                  </section>
              </section>
-             <section class="tracklist">
-                 <section class="container">
+             <section className="tracklist">
+                 {tracklist && (
+                 <section className="container">
                      <h2>Tracklist</h2>
-                     <ul class="tracklist__selection">
-                         <li>1. Terraforming Accident</li>
-                         <li>2. Angels of Growth</li>
-                         <li>3. World Society 2</li>
-                     </ul>
-                     <div class="credits">
-                         <p>All tracks written and recorded by Joanna Pope</p>
-                         <p>Artwork by Sam Lubicz</p>
+                     <div className="tracklist__selection">
+                         <ReactMarkdown source={tracklist.markdown} />
                      </div>
+                     {credits && (
+                     <div className="credits">
+                         <ReactMarkdown source={credits.markdown} />
+                     </div>
+                     )}
                  </section>
+                 )}
              </section>
         </TracklistContainer>
 
          <VideoComponentContainer>
 
-             <section class="video__component component releases__video container no-margin">
+             <section className="video__component component releases__video container no-margin">
                 <Video></Video>
              </section>
 

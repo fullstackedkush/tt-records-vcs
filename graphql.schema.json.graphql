@@ -773,6 +773,7 @@ type Post implements Node {
     content: RichText!
     "The time the document was created"
     createdAt: DateTime!
+    credits: RichText
     "Get the document in other stages"
     documentInStages(
         "Decides if the current stage should be included or not"
@@ -791,14 +792,18 @@ type Post implements Node {
     ): [Version!]!
     "The unique identifier"
     id: ID!
+    iframe: String
     image: Asset
     link: String!
     "The time the document was published. Null on documents in draft stage."
     publishedAt: DateTime
+    "Example Format: March 20th 2020"
+    publishedDate: String
     "System stage field"
     stage: Stage!
     subtitle: String
     title: String!
+    tracklist: RichText
     "The time the document was updated"
     updatedAt: DateTime!
 }
@@ -931,6 +936,8 @@ type Release implements Node {
     publishedAt: DateTime
     "System stage field"
     stage: Stage!
+    subtitle: String
+    title: String
     "The time the document was updated"
     updatedAt: DateTime!
 }
@@ -1079,10 +1086,14 @@ enum PostOrderByInput {
     createdAt_DESC
     id_ASC
     id_DESC
+    iframe_ASC
+    iframe_DESC
     link_ASC
     link_DESC
     publishedAt_ASC
     publishedAt_DESC
+    publishedDate_ASC
+    publishedDate_DESC
     subtitle_ASC
     subtitle_DESC
     title_ASC
@@ -1098,6 +1109,10 @@ enum ReleaseOrderByInput {
     id_DESC
     publishedAt_ASC
     publishedAt_DESC
+    subtitle_ASC
+    subtitle_DESC
+    title_ASC
+    title_DESC
     updatedAt_ASC
     updatedAt_DESC
 }
@@ -2376,10 +2391,14 @@ input PostCreateInput {
     category: Categories!
     content: RichTextAST!
     createdAt: DateTime
+    credits: RichTextAST
+    iframe: String
     image: AssetCreateOneInlineInput
     link: String!
+    publishedDate: String
     subtitle: String
     title: String!
+    tracklist: RichTextAST
     updatedAt: DateTime
 }
 
@@ -2448,6 +2467,25 @@ input PostManyWhereInput {
     id_not_starts_with: ID
     "All values starting with the given string."
     id_starts_with: ID
+    iframe: String
+    "All values containing the given string."
+    iframe_contains: String
+    "All values ending with the given string."
+    iframe_ends_with: String
+    "All values that are contained in given list."
+    iframe_in: [String!]
+    "All values that are not equal to given value."
+    iframe_not: String
+    "All values not containing the given string."
+    iframe_not_contains: String
+    "All values not ending with the given string"
+    iframe_not_ends_with: String
+    "All values that are not contained in given list."
+    iframe_not_in: [String!]
+    "All values not starting with the given string."
+    iframe_not_starts_with: String
+    "All values starting with the given string."
+    iframe_starts_with: String
     image: AssetWhereInput
     link: String
     "All values containing the given string."
@@ -2483,6 +2521,25 @@ input PostManyWhereInput {
     publishedAt_not: DateTime
     "All values that are not contained in given list."
     publishedAt_not_in: [DateTime!]
+    publishedDate: String
+    "All values containing the given string."
+    publishedDate_contains: String
+    "All values ending with the given string."
+    publishedDate_ends_with: String
+    "All values that are contained in given list."
+    publishedDate_in: [String!]
+    "All values that are not equal to given value."
+    publishedDate_not: String
+    "All values not containing the given string."
+    publishedDate_not_contains: String
+    "All values not ending with the given string"
+    publishedDate_not_ends_with: String
+    "All values that are not contained in given list."
+    publishedDate_not_in: [String!]
+    "All values not starting with the given string."
+    publishedDate_not_starts_with: String
+    "All values starting with the given string."
+    publishedDate_starts_with: String
     subtitle: String
     "All values containing the given string."
     subtitle_contains: String
@@ -2541,10 +2598,14 @@ input PostManyWhereInput {
 input PostUpdateInput {
     category: Categories
     content: RichTextAST
+    credits: RichTextAST
+    iframe: String
     image: AssetUpdateOneInlineInput
     link: String
+    publishedDate: String
     subtitle: String
     title: String
+    tracklist: RichTextAST
 }
 
 input PostUpdateManyInlineInput {
@@ -2567,9 +2628,13 @@ input PostUpdateManyInlineInput {
 input PostUpdateManyInput {
     category: Categories!
     content: RichTextAST!
+    credits: RichTextAST
+    iframe: String
     link: String!
+    publishedDate: String
     subtitle: String
     title: String!
+    tracklist: RichTextAST
 }
 
 input PostUpdateManyWithNestedWhereInput {
@@ -2666,6 +2731,25 @@ input PostWhereInput {
     id_not_starts_with: ID
     "All values starting with the given string."
     id_starts_with: ID
+    iframe: String
+    "All values containing the given string."
+    iframe_contains: String
+    "All values ending with the given string."
+    iframe_ends_with: String
+    "All values that are contained in given list."
+    iframe_in: [String!]
+    "All values that are not equal to given value."
+    iframe_not: String
+    "All values not containing the given string."
+    iframe_not_contains: String
+    "All values not ending with the given string"
+    iframe_not_ends_with: String
+    "All values that are not contained in given list."
+    iframe_not_in: [String!]
+    "All values not starting with the given string."
+    iframe_not_starts_with: String
+    "All values starting with the given string."
+    iframe_starts_with: String
     image: AssetWhereInput
     link: String
     "All values containing the given string."
@@ -2701,6 +2785,25 @@ input PostWhereInput {
     publishedAt_not: DateTime
     "All values that are not contained in given list."
     publishedAt_not_in: [DateTime!]
+    publishedDate: String
+    "All values containing the given string."
+    publishedDate_contains: String
+    "All values ending with the given string."
+    publishedDate_ends_with: String
+    "All values that are contained in given list."
+    publishedDate_in: [String!]
+    "All values that are not equal to given value."
+    publishedDate_not: String
+    "All values not containing the given string."
+    publishedDate_not_contains: String
+    "All values not ending with the given string"
+    publishedDate_not_ends_with: String
+    "All values that are not contained in given list."
+    publishedDate_not_in: [String!]
+    "All values not starting with the given string."
+    publishedDate_not_starts_with: String
+    "All values starting with the given string."
+    publishedDate_starts_with: String
     subtitle: String
     "All values containing the given string."
     subtitle_contains: String
@@ -2778,6 +2881,8 @@ input RGBAInput {
 
 input ReleaseCreateInput {
     createdAt: DateTime
+    subtitle: String
+    title: String
     updatedAt: DateTime
 }
 
@@ -2840,6 +2945,44 @@ input ReleaseManyWhereInput {
     publishedAt_not: DateTime
     "All values that are not contained in given list."
     publishedAt_not_in: [DateTime!]
+    subtitle: String
+    "All values containing the given string."
+    subtitle_contains: String
+    "All values ending with the given string."
+    subtitle_ends_with: String
+    "All values that are contained in given list."
+    subtitle_in: [String!]
+    "All values that are not equal to given value."
+    subtitle_not: String
+    "All values not containing the given string."
+    subtitle_not_contains: String
+    "All values not ending with the given string"
+    subtitle_not_ends_with: String
+    "All values that are not contained in given list."
+    subtitle_not_in: [String!]
+    "All values not starting with the given string."
+    subtitle_not_starts_with: String
+    "All values starting with the given string."
+    subtitle_starts_with: String
+    title: String
+    "All values containing the given string."
+    title_contains: String
+    "All values ending with the given string."
+    title_ends_with: String
+    "All values that are contained in given list."
+    title_in: [String!]
+    "All values that are not equal to given value."
+    title_not: String
+    "All values not containing the given string."
+    title_not_contains: String
+    "All values not ending with the given string"
+    title_not_ends_with: String
+    "All values that are not contained in given list."
+    title_not_in: [String!]
+    "All values not starting with the given string."
+    title_not_starts_with: String
+    "All values starting with the given string."
+    title_starts_with: String
     updatedAt: DateTime
     "All values greater than the given value."
     updatedAt_gt: DateTime
@@ -2858,13 +3001,13 @@ input ReleaseManyWhereInput {
 }
 
 input ReleaseUpdateInput {
-    "No fields in update input"
-    _: String
+    subtitle: String
+    title: String
 }
 
 input ReleaseUpdateManyInput {
-    "No fields in updateMany data input"
-    _: String
+    subtitle: String
+    title: String
 }
 
 input ReleaseUpdateManyWithNestedWhereInput {
@@ -2954,6 +3097,44 @@ input ReleaseWhereInput {
     publishedAt_not: DateTime
     "All values that are not contained in given list."
     publishedAt_not_in: [DateTime!]
+    subtitle: String
+    "All values containing the given string."
+    subtitle_contains: String
+    "All values ending with the given string."
+    subtitle_ends_with: String
+    "All values that are contained in given list."
+    subtitle_in: [String!]
+    "All values that are not equal to given value."
+    subtitle_not: String
+    "All values not containing the given string."
+    subtitle_not_contains: String
+    "All values not ending with the given string"
+    subtitle_not_ends_with: String
+    "All values that are not contained in given list."
+    subtitle_not_in: [String!]
+    "All values not starting with the given string."
+    subtitle_not_starts_with: String
+    "All values starting with the given string."
+    subtitle_starts_with: String
+    title: String
+    "All values containing the given string."
+    title_contains: String
+    "All values ending with the given string."
+    title_ends_with: String
+    "All values that are contained in given list."
+    title_in: [String!]
+    "All values that are not equal to given value."
+    title_not: String
+    "All values not containing the given string."
+    title_not_contains: String
+    "All values not ending with the given string"
+    title_not_ends_with: String
+    "All values that are not contained in given list."
+    title_not_in: [String!]
+    "All values not starting with the given string."
+    title_not_starts_with: String
+    "All values starting with the given string."
+    title_starts_with: String
     updatedAt: DateTime
     "All values greater than the given value."
     updatedAt_gt: DateTime
@@ -2990,23 +3171,23 @@ input VersionWhereInput {
 }
 
 
-"Raw JSON value"
-scalar Json
-
-"A date string, such as 2007-12-03 (YYYY-MM-DD), compliant with ISO 8601 standard for representation of dates using the Gregorian calendar."
-scalar Date
-
-scalar RGBAHue
-
-scalar RGBATransparency
+"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the date-timeformat outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representationof dates and times using the Gregorian calendar."
+scalar DateTime
 
 "The Long scalar type represents non-fractional signed whole numeric values. Long can represent values between -(2^63) and 2^63 - 1."
 scalar Long
 
-"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the date-timeformat outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representationof dates and times using the Gregorian calendar."
-scalar DateTime
-
 "Slate-compatible RichText AST"
 scalar RichTextAST
 
+scalar RGBAHue
+
+"Raw JSON value"
+scalar Json
+
 scalar Hex
+
+scalar RGBATransparency
+
+"A date string, such as 2007-12-03 (YYYY-MM-DD), compliant with ISO 8601 standard for representation of dates using the Gregorian calendar."
+scalar Date

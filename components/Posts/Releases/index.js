@@ -316,7 +316,7 @@ const CompactContainer = styled.div`
     `
 
 
-const Releases = ({id, title, subtitle, content, image, view, link, publishedDate}) => {
+const Releases = ({id, title, subtitle, content, image, view, iframe, publishedDate}) => {
     return (
         <Link href={`/release/${id}`}>
         <ReleaseWrapper>
@@ -333,7 +333,9 @@ const Releases = ({id, title, subtitle, content, image, view, link, publishedDat
                 <h2 class="title">{title}</h2>
                 <h2 class="subtitle">{subtitle}</h2>
                 <p class="text"></p>
-                <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed=%2Ftobagotracks%2Fttm057-cvn%2F"></iframe>
+                {iframe && (
+                <iframe width="100%" height="60" src={iframe}></iframe>
+                )}
             </div>
             </FullContainer>
             ) : (
