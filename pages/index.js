@@ -12,9 +12,10 @@ import styled from "styled-components";
 import {GetPostsDocument, useGetPostsQuery} from "../schema";
 import {initializeApollo} from "../utilites";
 import React, {useState} from 'react';
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ContainerWrapper = styled.div`
+  width: 100%;
   max-width: 1140px;
   padding: 0 1rem;
   margin: 2rem auto 60px;
@@ -82,7 +83,7 @@ const Home = ()  => {
                 <title>TT records | Homepage</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-
+            
             <Nav setShow={setShow} changeCategory={changeCategory} filters={filters}>
                 <form>
                     {filters.map(v => (
@@ -94,6 +95,7 @@ const Home = ()  => {
                     ))}
                 </form>
             </Nav>
+
             <Hero title="London Record Label & Occasional Function. Extra Text to bring it to a 2nd line.">
                 <div className="info__option">
                     <p>View in:</p>
@@ -113,7 +115,10 @@ const Home = ()  => {
                 </div>
             </Hero>
             <Overlay show={show} setShow={setShow} />
+            <AnimatePresence>
+            <motion.div exit={{ opacity: 0 }} animate={{ opacity: 1 }} initial={{opacity: 0}}>
             <ContainerWrapper>
+            
                 {data.posts.map(v => (
                     <>
                         {v.category === 'radio' && (
@@ -134,6 +139,8 @@ const Home = ()  => {
                     </>
                 ))}
             </ContainerWrapper>
+            </motion.div>
+            </AnimatePresence>
             <FooterWrapper/>
         </>
     )
@@ -154,7 +161,5 @@ export async function getStaticProps() {
         revalidate: 1,
     }
 }
-
-
 
 export default Home;

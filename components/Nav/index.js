@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import Link from "next/link";
+import Sticky from 'react-stickynode';
+
 import React, {useState} from "react";
-
-
 
 const NavWrapper = styled.nav`
     display: flex;
@@ -10,6 +11,41 @@ const NavWrapper = styled.nav`
     padding-top: 40px;
     background: ${props => props.bg};
     flex-direction: column;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #111;
+
+    .sticky-outer-wrapper > div > div {
+        margin-left: auto;
+        margin-right: 3.5%;
+        border-left: 1px solid black;
+    }
+
+    .sticky-outer-wrapper > div > div > form:before {
+        width: 0;
+    }
+
+    .sticky-outer-wrapper {
+        opacity: 0;
+    }
+
+    .sticky-outer-wrapper.active {
+        opacity: 1;
+    }
+
+    .sticky-outer-wrapper.active > div {
+        top: 20px !important;
+    }
+
+    @media screen and (max-width: 1000px) {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 999;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    
+
 `
 
 const NavContainer = styled.div`
@@ -19,7 +55,6 @@ const NavContainer = styled.div`
     background-color: #111;
     margin: 0 auto;
 `
-
 
 const Logo = styled.li`
     min-width: 72px;
@@ -31,6 +66,7 @@ const Logo = styled.li`
         height: 44px;
         position: relative;
         top: 2px;
+        cursor: pointer;
     }
 `
 
@@ -53,7 +89,7 @@ const MobileFilter = styled.div`
     height: auto;
     color: white;
     position: absolute;
-    top: 90px;
+    top: 85px;
     padding-bottom: 32px;
     padding-right: 20px;
     border-bottom: 1px solid white;
@@ -92,7 +128,7 @@ label input[type="radio"] {
 }
 
 label:last-of-type {
-    padding-right: 9px;
+    padding-right: 40px;
 }
 
 label span {
@@ -143,15 +179,23 @@ const MenuPages = styled.ul`
     border: 1px solid black;
     border-right: none;
     height: 45px;
+    // margin-top: 16px;
     display: none;
+
+    .menu__link {
+        margin-top: 14px;
+        padding-left: 12px;
+        padding-right: 12px;
+        cursor: pointer;
+    }
 
     @media only screen and (min-width: 1100px) {
         display: flex;
     }
 
     @media only screen and (max-width: 1148px) {
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 16px;
+        padding-right: 16px;
     }
 
     li {
@@ -226,10 +270,11 @@ const MobileMenuPages = styled.ul`
         display: flex;
         color: white;
         font-size: 18px;
+        margin-top: 10px;
         
         a.menu {
             position: relative;
-            padding-right: 8px;
+            padding-right: 6px;
         }
 
         a.menu span {
@@ -253,6 +298,20 @@ const MobileMenuPages = styled.ul`
             position: absolute;
             top: 2px;
             left: 2px;
+            opacity: 0;
+        }
+
+        a.menu:hover span:after, a.menu:active span:after {
+            content: "";
+            height: 8px;
+            width: 8px;
+            background-color: white;
+            display: block;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            opacity: 1; 
         }
 
         a.filter{
@@ -291,7 +350,6 @@ border: 1px solid black;
 border-left-color: black;
 border-left-style: solid;
 border-left-width: 1px;
-padding-right: 24px;
 border-left: none;
 background-color: white;
 height: 45px;
@@ -300,12 +358,24 @@ height: 45px;
     width: 620px;
     display: block;
 }
+&:before {
+    content: "";
+    background-color: white;
+    background-size: contain;
+    width: 14px;
+    height: 43px;
+    background-repeat: no-repeat;
+    display: block;
+    position: absolute;
+    z-index: 9;
+}
 
 form {
     display: flex;
     justify-content: space-between;
     text-align: left;
     verticle-align: top;
+    padding-right: 24px;
 
     &::before {
         content: "";
@@ -315,6 +385,8 @@ form {
         height: 43px;
         background-repeat: no-repeat;
         display: block;
+        position: relative;
+        z-index: 9;
     }
 
     @media only screen and (min-width: 1100px) {
@@ -389,14 +461,13 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
 
             <NavContainer>
 
-                <Logo><a href="#"><img src="https://media.graphcms.com/WMGtnEUQ3GYWQcKDQHdn" alt="" /></a></Logo>
+                <Logo><Link href="/"><img src="https://media.graphcms.com/WMGtnEUQ3GYWQcKDQHdn" alt="" /></Link></Logo>
 
                 <Menu>
                     <MenuPages>
-                        <li><a href="#">Artists</a></li>
-                        <li><a href="#">Shop</a></li>
-                        <li><a href="#">About</a></li>
-                        <li className=""><a href="#">Search</a><img src="https://media.graphcms.com/eDrHGLAQbW1Px8TAEVKg" /><input type="search" /></li>
+                        <Link href="/artists"><span className="menu__link">Artists</span></Link>
+                        <li><a target="_blank" href="https://tobagotracks.bandcamp.com/">Shop</a></li>
+                        <Link href="/about"><span className="menu__link">About</span></Link>
                     </MenuPages>
 
                     <MobileMenuPages>
@@ -406,11 +477,9 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                         <li><a className="menu" href="#" onClick={() => setShow(true)}>Menu<span></span></a></li>
                     </MobileMenuPages>
 
-
                     <NavHub title="">
-                        <p>{title}</p>
                         {children}
-                    </NavHub>
+                    </NavHub>         
 
                 </Menu>
             </NavContainer>
@@ -428,6 +497,12 @@ const Nav = ({title, children, setShow, changeCategory , filters}) => {
                 </form>
             </MobileFilter>
             )}
+
+                    <Sticky innerZ={9999} enabled={true}>
+                        <NavHub title="">
+                            {children}
+                        </NavHub>
+                    </Sticky>
 
         </NavWrapper>
     );

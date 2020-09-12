@@ -57,6 +57,13 @@ table {
 
 html {font-size: 100%;}
 
+
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* End of CSS Reset */
 
 
@@ -106,7 +113,7 @@ body {
   color: #333;
 }
 
-body {
+#__next {
   display: flex;
   min-height: 100vh;
   flex-direction: column;

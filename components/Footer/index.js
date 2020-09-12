@@ -6,6 +6,7 @@ const FooterWrapper = styled.footer`
     align-items: center;
     justify-content: center;
     background-size: cover;
+    border-top: 1px solid #111;
 
     .footer__inner__container {
         border: 1px solid #111;

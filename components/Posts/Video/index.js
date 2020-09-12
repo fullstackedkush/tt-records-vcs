@@ -59,7 +59,7 @@ const VideoWrapper = styled.section`
         position: absolute;
         top: calc(50% - 84px);
         left: 20px;
-        z-index: 999;
+        z-index: 99;
         color: white;
         display: flex;
         flex-direction: row;

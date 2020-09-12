@@ -28,7 +28,7 @@ li:after {
 }
 
 span.name {
-    min-width: 100%;
+    min-width: 90%;
     display: flex;
     justify-content: space-between;
 }

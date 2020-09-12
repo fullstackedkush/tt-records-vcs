@@ -3,8 +3,8 @@ import styled from "styled-components";
 const Marquee = styled.div`
     overflow: hidden;
     position: relative;
-    background-color: ${props => props.bg};
-    color: ${props => props.color};
+    background-color: #111;
+    color: #fff;
 
     &::before {
         content: "";
@@ -38,13 +38,12 @@ const Marquee = styled.div`
     }
 `
 
-const MarqueeScroll = ({ title, children, props }) => (
+const MarqueeWhite = ({ title, children, props }) => (
 
     <Marquee>
         <div className="scrolling">{ children }</div>
     </Marquee>
 );
 
-export default MarqueeScroll;
-
+export default MarqueeWhite;
 

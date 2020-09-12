@@ -1,13 +1,16 @@
 import Head from 'next/head'
-import Nav from "../../components/Nav";
+import NavWhite from "../../components/Nav/white";
 import Overlay from "../../components/Nav/Overlay";
 import Video from "../../components/Posts/Video";
+import MarqueeWhite from "../../components/Marquee/white";
 import FooterWrapper from "../../components/Footer";
 import styled from "styled-components";
 import { useRouter } from 'next/router'
 import {initializeApollo} from "../../utilites";
 import {GetPostDocument, GetPostsDocument} from "../../schema";
 import ReactMarkdown from "react-markdown";
+import React, {useState} from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FeaturedRelease = styled.header`
 
@@ -15,6 +18,12 @@ display: flex;
 justify-content: center;
 align-content: center;
 flex-direction: column;
+
+
+.release__container {
+    margin-bottom: 8px;
+}
+
 
 .release__category {
     display: inline-block;
@@ -41,6 +50,8 @@ flex-direction: column;
     border-bottom: 1px solid #111;
     padding-top: 30px;
     padding-bottom: 30px;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 .desktop-bandcamp {
@@ -255,9 +266,14 @@ ul.tracklist__selection li {
 
 .featured__release__description {
     margin-top: 30px;
+
+    @media screen and (max-width: 1000px) {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
 }
 
-.featured__release__description p.lead {
+.featured__release__description p:first-of-type {
     font-family: 'Nimbus Sans L';
     font-size: 22px;
     letter-spacing: -0.66px;
@@ -276,9 +292,9 @@ ul.tracklist__selection li {
 }
 
 @media only screen and (min-width: 1000px) {
-    
     display: flex;
     max-width: 1140px;
+    width: 100%;
     margin: 1rem auto;
     margin-bottom: 1rem;
     padding: 0 1rem;
@@ -305,7 +321,6 @@ ul.tracklist__selection li {
         padding-right: 80px;
     }
 }
-
 `
 
 const VideoComponentContainer = styled.div`
@@ -348,19 +363,26 @@ const VideoComponentContainer = styled.div`
 
 
 const Release = (props)  => {
-const {id, title, content, iframe, tracklist, credits} = props;
+const {id, title, subtitle, content, iframe, tracklist, credits, video} = props;
+const [view, setView] = useState('full');
+const [show, setShow] = useState(false);
+
 
 console.log(props)
     return (
         <>
             <Head>
-                <title>TT records | Homepage</title>
+                <title>TT records | Releases</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Nav></Nav>
-            <Overlay/>
+            <NavWhite setShow={setShow}>
+                <MarqueeWhite>Reading: {subtitle} - {title}</MarqueeWhite>
+            </NavWhite>
 
+            <Overlay show={show} setShow={setShow} />
+            <AnimatePresence>
+            <motion.div exit={{ opacity: 0 }} animate={{ opacity: 1 }} initial={{opacity: 0}}>
     <FeaturedRelease>
 
          <div className="content__container">
@@ -369,7 +391,7 @@ console.log(props)
                  <date className="date">Released March 20th 2020</date>
              </div>
          <h1 className="title">{title}</h1>
-         <h2>Joanna Pope</h2>
+            <h2>{subtitle}</h2>
          <div className="desktop-bandcamp"><a href="#">Buy on Bandcamp</a></div>
          </div>
 
@@ -403,15 +425,17 @@ console.log(props)
                  )}
              </section>
         </TracklistContainer>
+        {video && (
+        <VideoComponentContainer>
 
-         <VideoComponentContainer>
-
-             <section className="video__component component releases__video container no-margin">
+            <section className="video__component component releases__video container no-margin">
                 <Video></Video>
-             </section>
+            </section>
 
         </VideoComponentContainer>
-
+        )}
+        </motion.div>
+            </AnimatePresence>
         <FooterWrapper/>
         </>
     )

@@ -15,7 +15,7 @@ const Wrapper = styled.div`
         line-height: 47px;
         max-width: 1260px;
         padding-right: 50px;
-        padding-top: 230px;
+        padding-top: 180px;
         color: white;
         text-transform: uppercase;
     }
